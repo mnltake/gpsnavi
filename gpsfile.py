@@ -8,7 +8,7 @@ port = 52002
 bufsize = 256
 buff = StringIO()
 filepath = '/home/pi/rtklog/'
-＃filepath = 'H:/rtklog/'
+#filepath = 'H:/rtklog/'
 #座標取得
 def getpoint():
     
