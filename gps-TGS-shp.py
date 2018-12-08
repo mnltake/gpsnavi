@@ -128,27 +128,29 @@ def  getshp():
     sock.connect((host, 52002))
     buff = StringIO()
     data = sock.recv(bufsize)
+    sock.close()
     buff.write(data.decode('utf-8'))
     data = buff.getvalue().replace('\n', '')
     dlist = data.split()
     try : 
         point = ( float(dlist[3]) , float(dlist[2]) )#（経度lon、緯度lat）
+
+        
+        shp = shapefile.Reader('/home/pi/SHP/2019utf_WGS84.shp') #open the shapefile
+        all_shapes = shp.shapes() 
+        all_records = shp.records()
+
+        for i in range(len(all_shapes)):
+            boundary = all_shapes[i] 
+            if Point(point).within(shape(boundary)): 
+               this_record= all_records[i] [:]
+               print( "圃場データ",this_record[9:11]    )
+               return this_record
+        print("NO SHP DATA")
+        return 0
     except :
-        getshp()    
-    sock.close()
-    shp = shapefile.Reader('/home/pi/SHP/2019utf-WGS84.shp') #open the shapefile
-    all_shapes = shp.shapes() 
-    all_records = shp.records()
-
-    for i in range(len(all_shapes)):
-        boundary = all_shapes[i] 
-        if Point(point).within(shape(boundary)): 
-           this_record= all_records[i] [:]
-           print( "圃場データ",this_record[9:11]    )
-           return this_record
-    print("NO SHP DATA")
-    return 0
-
+        getshp()
+        
 try:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((host, port))
@@ -243,11 +245,14 @@ try:
             time.sleep(2)
         elif ( key == 12):#shp属性を取る
             shpdata=getshp()
-            if shpdata !=0:
-                area = shpdata[3]
-            time.sleep(3)
-
-#main            
+            try:
+                if shpdata !=0:
+                    area = shpdata[3]
+                time.sleep(3)
+            except:
+                print("getshp error")
+                time.sleep(1)
+#main           
         else :
             nowpoint = setpoint()
             if (base == 0) :
