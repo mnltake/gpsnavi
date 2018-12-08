@@ -1,20 +1,19 @@
 #!/usr/bin/python3
-import socket , time ,math #,os
+import socket , time ,math 
 from io import StringIO
 import RPi.GPIO as GPIO
-#from fabric.colors import red, green ,blue ,magenta,yellow
+
 import  ledarw2
 import shapefile
-from shapely.geometry.point import Point # Point class
-from shapely.geometry import shape # shape() is a function to convert geo objects through the interface
-
+from shapely.geometry.point import Point 
+from shapely.geometry import shape 
 
 host = '127.0.0.1' #localhost
-port = 52001
+port = 52001 #LatLonHigh
 #host = '192.168.3.6' #tab
 #port = 52004
-bufsize = 200
-buff = StringIO()
+bufsize = 256
+#buff = StringIO()
 wide = 195  #作業機幅cm
 ax = 0
 ay = 0
@@ -114,25 +113,39 @@ def setpoint():
         print("setpoint re-try")
         setpoint()
     return dlist
+#Point Save
+def pointsave(nowpoint)
+    fileobj = open(file, "a", encoding = "utf-8")
+    savepoint = "  ".join(nowpoint)
+    fileobj.write(savepoint)
+    fileobj.write("\n")
+    fileobj.close()
+    print("PointSave")
 
 #shp属性を取得
 def  getshp():
-    basepoint =[-21148.685 ,-116039.34]
-    #basepoint =[-21148.685, -116000.34]
-    pointlist = setpoint()
-    #print(pointlist)
-    point = ( float(pointlist[2]) +basepoint[0] , float(pointlist[3]) +basepoint[1] )
-    #print(point)
-    shp = shapefile.Reader('/home/pi/SHP/2019utf.shp') #open the shapefile
-    all_shapes = shp.shapes() # get all the polygons
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect((host, 52002))
+    buff = StringIO()
+    data = sock.recv(bufsize)
+    buff.write(data.decode('utf-8'))
+    data = buff.getvalue().replace('\n', '')
+    dlist = data.split()
+    try : 
+        point = ( float(dlist[3]) , float(dlist[2]) )#（経度lon、緯度lat）
+    except :
+        getshp()    
+    sock.close()
+    shp = shapefile.Reader('/home/pi/SHP/2019utf-WGS84.shp') #open the shapefile
+    all_shapes = shp.shapes() 
     all_records = shp.records()
 
     for i in range(len(all_shapes)):
-        boundary = all_shapes[i] # get a boundary polygon
-        if Point(point).within(shape(boundary)): # make a point and see if it's in the polygon
-           shp_attribute= all_records[i] [:]# get the second field of the corresponding record
-           print( "圃場データ",shp_attribute[9:11]    )
-           return shp_attribute
+        boundary = all_shapes[i] 
+        if Point(point).within(shape(boundary)): 
+           this_record= all_records[i] [:]
+           print( "圃場データ",this_record[9:11]    )
+           return this_record
     print("NO SHP DATA")
     return 0
 
@@ -149,6 +162,7 @@ try:
                 c = 0
                 print("A-PointSet")
                 time.sleep(1)
+                pointsave(setAlist)
             except :
                 print("Set error")
                 time.sleep(1)
@@ -158,8 +172,9 @@ try:
             try :
                 _bx = float(setBlist[2])
                 _by = float(setBlist[3])
-                print("B-PintSet")
+                print("B-PointSet")
                 time.sleep(1)
+                pointsave(setBlist)
             except :
                 print("Set error")
                 time.sleep(1)
@@ -170,6 +185,7 @@ try:
                 aay = float(setAAlist[3])
                 print("AA-PointSet")
                 time.sleep(1)
+                pointsave(setAAlist)
             except :
                 print("Set error")
                 time.sleep(1)
@@ -181,6 +197,7 @@ try:
                 bby = float(setBBlist[3])
                 print("BB-PintSet")
                 time.sleep(1)
+                pointsave(setBBlist)
             except :
                 print("Set error")
                 time.sleep(1)                
@@ -228,7 +245,7 @@ try:
             shpdata=getshp()
             if shpdata !=0:
                 area = shpdata[3]
-            time.sleep(5)
+            time.sleep(3)
 
 #main            
         else :
