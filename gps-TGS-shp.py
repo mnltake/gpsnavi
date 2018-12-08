@@ -114,7 +114,7 @@ def setpoint():
         setpoint()
     return dlist
 #Point Save
-def pointsave(nowpoint)
+def pointsave(nowpoint):
     fileobj = open(file, "a", encoding = "utf-8")
     savepoint = "  ".join(nowpoint)
     fileobj.write(savepoint)
