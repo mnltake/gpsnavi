@@ -1,12 +1,13 @@
-#!/usr/bin/python3
+﻿#!/usr/bin/python3
 import socket , time ,math 
 from io import StringIO
 import RPi.GPIO as GPIO
 
-import  ledarw2
+import  ledarw_TGS as ledarw
 import shapefile
 from shapely.geometry.point import Point 
 from shapely.geometry import shape 
+from datetime import datetime
 
 host = '127.0.0.1' #localhost
 port = 52001 #LatLonHigh
@@ -40,7 +41,8 @@ nq = 0
 I = '|'
 O = ' '
 view = 0
-file = 'TGSpointlog.txt'
+now = datetime.now()
+file = '/home/pi/RTKLIB/rtklog/POINTlog_{0:%Y%m%d%H%M}.pos'.format(now)
 menseki  = 0
 soukou = 0
 
@@ -342,7 +344,7 @@ try:
             
 #LED
             #ledarw2.ledbar( arw , ledpins)       
-            ledarw2.ledarw( arw , ledpins)       
+            ledarw( arw , ledpins)       
 #表示
             if (view == 0 ) :
                 print("\033[35m%s\033[0m" %fig)
