@@ -42,12 +42,13 @@ I = '|'
 O = ' '
 view = 0
 now = datetime.now()
-file = '/home/pi/RTKLIB/rtklog/POINTlog_{0:%Y%m%d%H%M}.pos'.format(now)
+pointfile = '/home/pi/RTKLIB/rtklog/POINTlog_{0:%Y%m%d%H%M}.pos'.format(now)
+shpfile = '/home/pi/SHP/2019utf_WGS84.shp'
 menseki  = 0
 soukou = 0
 
 GPIO.setmode(GPIO.BOARD)
-#植え付け
+#ポジションレバー
 key_u = 19
 GPIO.setup(key_u,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 #キーパッド
@@ -117,7 +118,7 @@ def setpoint():
     return dlist
 #Point Save
 def pointsave(nowpoint):
-    fileobj = open(file, "a", encoding = "utf-8")
+    fileobj = open(pointfile, "a", encoding = "utf-8")
     savepoint = "  ".join(nowpoint)
     fileobj.write(savepoint)
     fileobj.write("\n")
@@ -138,7 +139,7 @@ def  getshp():
         point = ( float(dlist[3]) , float(dlist[2]) )#（経度lon、緯度lat）
 
         
-        shp = shapefile.Reader('/home/pi/SHP/2019utf_WGS84.shp') #open the shapefile
+        shp = shapefile.Reader(shpfile) #open the shapefile
         all_shapes = shp.shapes() 
         all_records = shp.records()
 
