@@ -352,7 +352,7 @@ try:
             
 #LED
             #ledarw2.ledbar( arw , ledpins)       
-            ledarw( arw , ledpins)       
+            ledarw.ledarw( arw , ledpins)       
 #表示
             if (view == 0 ) :
                 print("\033[35m%s\033[0m" %fig)
