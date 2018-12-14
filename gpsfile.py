@@ -2,6 +2,7 @@
 import socket 
 from io import StringIO
 from datetime import datetime
+host = '127.0.0.1' #localhost
 port = 52002
 bufsize = 150
 buff = StringIO()
