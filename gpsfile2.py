@@ -1,37 +1,47 @@
 #!/usr/bin/python3
-import socket 
+import socket ,time
 from io import StringIO
 from datetime import datetime
 import shapefile
 from shapely.geometry.point import Point 
 from shapely.geometry import shape 
 host = '127.0.0.1' #localhost
-#host = '192.168.3.20' 
+#host = '192.168.3.23' 
 port = 52002
-bufsize = 256
+bufsize = 150
+
 buff = StringIO()
-#filepath = '/home/pi/rtklog/'
-#shpfile = '/home/pi/SHP/2019utf_WGS84.shp'
-shpfile = '‪D:/QGIS/2019utf_WGS84.shp'
-filepath = 'D:/rtklog'
+filepath = '/home/pi/rtklog/'
+shpfile = '/home/pi/SHP/2019utf_WGS84.shp'
+#shpfile = '‪D:/QGIS/2019utf_WGS84.shp'
+#filepath = 'D:/rtklog'
 #座標取得
 def getpoint():
-    
-    buff = StringIO()
-    data = sock.recv(bufsize)
-    #print(len(data))
-    buff.write(data.decode('utf-8'))
-    data = buff.getvalue().replace('\n', '')
-    pointlist = data.split()
-    buff.close()
-    if  len(pointlist)  <15  :
-        print("getpoint re-try")
-        getpoint()
-    return pointlist
+    try:
+        #sock.connect((host, port))
+        buff = StringIO()
+        data = sock.recv(bufsize)
+        #sock,close()
+        #print(len(data))
+        buff.write(data.decode('utf-8'))
+        data = buff.getvalue()#.replace('\n', '')
+        data =data.replace('/', '')
+        data =data.replace(':', '')
+        pointlist = data.split()
+        buff.close()
+        #print(pointlist)
+        if  float(pointlist[2] ) < 34  :
+            print("getpoint re-try")
+            #time.sleep(1)
+            getpoint()
+        return pointlist
+    except :
+        print("getpoint error")
+        return 0
 
-def getshp(lon,lat):
+def getshp(lon,lat): 
+    try :
 
-    try : 
         point = ( lon , lat )#（経度lon、緯度lat）
         print(point)
         shp = shapefile.Reader(shpfile) #open the shapefile
@@ -50,16 +60,23 @@ def getshp(lon,lat):
     except :
         print("getshp error")
         return 0
+    
+#main
 try:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((host, port))
     while True:
+        
         nowpoint = getpoint()
         shprecord = getshp(float(nowpoint[3]),float(nowpoint[2]))
         while shprecord == 0:
             nowpoint = getpoint()
+            nowpoint = getpoint()
             shprecord = getshp(float(nowpoint[3]),float(nowpoint[2]))
-            
+            #sock.shutdown()
+            #sock.close()
+            #time.sleep(1)
+            #sock.connect((host,port))
         now = datetime.now()
         file = '{}_{0:%Y%m%d%H%M}.csv'.format(shprecord[9],now)
         print(file)
@@ -70,9 +87,10 @@ try:
                 fileobj.write(savepoint + "\n")
                 fileobj.close()
                 #print("PointSave")
+        sock.close()
 except socket.error:
     print('socket error')
 
 except KeyboardInterrupt:
     pass
-sock.close()
+

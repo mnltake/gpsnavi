@@ -1,0 +1,30 @@
+# rtk-setting
+rtklibの自動起動
+RaspberryPi用自動起動ファイル
+RTKLIBインストールdir = /home/pi/RTKLIB/
+gpsnaviインストールdir  = /home/pi/gpsnavi/
+
+cd /home/pi/gpsnavi/
+sudo chmod 755 *.py
+sudo chmod 755 *.sh
+#(base)
+
+sudo mv str2str.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl start str2str.service
+sudo systemctl enable str2str.service
+
+#(rover)
+sudo mv rtkrcv.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl start rtkrcv.service
+sudo systemctl enable rtkrcv.service
+nano ~/.config/lxsession/LXDE-pi/autostart
+＋　@/home/pi/gpsnavi/gpsnavi.sh
+ 
+
+#(shutdownbutton)
+sudo mv shutdownd.service /etc/systemd/system
+sudo systemctl daemon-reload
+sudo systemctl start shutdownd.service
+sudo systemctl enable shutdownd.service
