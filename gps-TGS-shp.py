@@ -345,7 +345,7 @@ try:
 #作業時間予測
             if (spd != 0):
                 resttime = (area - menseki) / (60 * spd *wide) #残り面積(㎡）/作業速度（㎡/分）
-            else
+            else :
                 resttime = 999
             if (resttime > 999):
                 resttime =999
