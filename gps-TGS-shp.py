@@ -345,24 +345,24 @@ try:
 #作業時間予測
             if (spd != 0):
                 resttime = (area - menseki) / (60 * spd *wide) #残り面積(㎡）/作業速度（㎡/分）
-            else
+            else:
                 resttime = 999
             if (resttime > 999):
                 resttime =999
             
 #LED
             #ledarw2.ledbar( arw , ledpins)       
-            ledarw( arw , ledpins)       
+            ledarw.ledarw( arw , ledpins)       
 #表示
             if (view == 0 ) :
-                print("\033[35m%s\033[0m" %fig)
+                #print("\033[35m%s\033[0m" %fig)
                 print("\033[32m%s\033[0m" %fig)
                 print("\033[32m%s\033[0m" %fig)
                 print("\033[35m    Nav %+4d cm   工程 %d\033[0m" %(nav,koutei))
                 print(" 　LINE %s   %s　c=%d" %(revfig,blf,c)) 
                 print(" 　Q = %d  速度%4.1f km/h"  %(nq,spd*3.6))
                 #print("　 幅 =%d  c = %d" %(wide,c))
-                print("残り　%3d 分" %resttime)
+                print("　残り　%3d 分" %resttime)
                 print("　ほ場=%d㎡作業＝%d㎡" %(area,menseki))              
             else :
                 if nq == 1 :
