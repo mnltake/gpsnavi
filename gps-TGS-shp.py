@@ -1,4 +1,12 @@
 ﻿#!/usr/bin/python3
+'''
+トラクタTGS　ロータリー2ｍ
+wide = 195
+ledarw_TGS
+shp
+圃場面積　作業面積　残り時間表示
+'''
+
 import socket , time ,math 
 from io import StringIO
 import RPi.GPIO as GPIO
@@ -10,11 +18,8 @@ from ledarw_TGS import ledarw
 from keypad import keypad_get
 
 host = '127.0.0.1' #localhost
-port = 52001 #LatLonHigh
-#host = '192.168.3.6' #tab
-#port = 52004
+port = 52001 #enu
 bufsize = 150
-#buff = StringIO()
 wide = 195  #作業機幅cm
 ax = 0 ;ay = 0;bx = 1 ;by = -1
 _ax = 0;_ay = 0;_bx = 1;_by = 0;_rad = 0
@@ -33,7 +38,7 @@ view = 0
 now = datetime.now()
 pointfile = '/home/pi/RTKLIB/rtklog/POINTlog_{0:%Y%m%d%H%M}.pos'.format(now)
 shpfile = '/home/pi/SHP/2019utf_WGS84.shp'
-menseki  = 0;soukou = 0;menseki_total =0
+menseki  = 0;kyori = 0;menseki_total =0
 
 GPIO.setmode(GPIO.BOARD)
 
