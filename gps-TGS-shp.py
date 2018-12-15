@@ -331,10 +331,10 @@ try:
                 if shpdata !=0:
                     area = shpdata[3] #4番目に面積レコード
                     base =1
-                    aax = shpdata[11]
-                    aay = shpdata[12]
-                    bbx = shpdata[13]
-                    bby = shpdata[14]
+                    aax = shpdata[14]
+                    aay = shpdata[15]
+                    bbx = shpdata[16]
+                    bby = shpdata[17]
                     rrad =math.atan2(( bby - aay ),( bbx - aax ))
                     print("Auto Set Line")
                     time.sleep(1) 
