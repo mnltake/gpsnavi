@@ -1,6 +1,6 @@
-gpsnavi
+RTK-GPS/GNSS guidance for agricultur tractor  by python code
+powerd by RTKLIB
 
-gpsnavi python code
 
 How to use
 
