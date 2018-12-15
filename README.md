@@ -1,4 +1,4 @@
-RTK-GPS/GNSS guidance for agricultur tractor  by python code
+RTK-GPS/GNSS guidance for agriculture tractor  by python code
 powerd by RTKLIB
 
 
