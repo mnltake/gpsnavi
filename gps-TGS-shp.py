@@ -164,7 +164,7 @@ try:
             try :
                 _ax = float(setAlist[2])
                 _ay = float(setAlist[3])
-                c = 0
+                c = -30
                 print("A-PointSet")
                 time.sleep(1)
                 pointsave(setAlist)
@@ -344,7 +344,7 @@ try:
                 soukou += sz #m
 #作業時間予測
             if (spd != 0):
-                resttime = (area - menseki) / (60 * spd *wide) #残り面積(㎡）/作業速度（㎡/分）
+                resttime = (area - menseki) / (0.6 * spd *wide) #残り面積(㎡）/作業速度（㎡/分）
 
             else:
 
