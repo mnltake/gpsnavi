@@ -124,7 +124,7 @@ try:
                 ay = aay
                 bx = bbx
                 by = bby
-                blf = "AA-BB"
+                blf = "Auto"
                 rad = rrad
             try :
                 nx = float(nowpoint[2]) #基準点からのXｍ
@@ -330,6 +330,14 @@ try:
             try:
                 if shpdata !=0:
                     area = shpdata[3] #4番目に面積レコード
+                    base =1
+                    aax = shpdata[11]
+                    aay = shpdata[12]
+                    bbx = shpdata[13]
+                    bby = shpdata[14]
+                    rrad =math.atan2(( bby - aay ),( bbx - aax ))
+                    print("Auto Set Line")
+                    time.sleep(1) 
                 else :
                     area = 0
                 time.sleep(2)
