@@ -1,15 +1,6 @@
-#! /user/bin/env python
-import RPi.GPIO as GPIO
-import time
-GPIO.setmode(GPIO.BOARD)
-   # ledpins =  [36,24,22,40,18,16,38,26,32]
-ledpins =  [38,16,18,40,22,24,36,26,32]
-GPIO.cleanup()
-GPIO.setup( ledpins , GPIO.OUT )
-GPIO.output( ledpins , GPIO.HIGH )
-
-
+#! /user/bin/env python3
 def ledarw( arw ,ledpins):
+    import RPi.GPIO as GPIO
     pins = ledpins
     r = pins[8]
     l = pins[7]
@@ -34,6 +25,7 @@ def ledarw( arw ,ledpins):
         i= i+1
 
 def ledbar( arw ,ledpins):
+    import RPi.GPIO as GPIO
     pins = ledpins
     r = pins[8]
     l = pins[7]
@@ -51,8 +43,10 @@ def ledbar( arw ,ledpins):
     elif arw <= -14 :
         arw = -14
     aarw = abs(arw) / 2  -1
+
     if aarw >= 0:
-        GPIO.output( pins[aarw], GPIO.LOW )
+        i = int(aarw)
+        GPIO.output( pins[i], GPIO.LOW )
          
     
 if __name__ == '__main__':
@@ -60,7 +54,7 @@ if __name__ == '__main__':
     import time
     GPIO.setmode(GPIO.BOARD)
    # ledpins =  [36,24,22,40,18,16,38,26,32]
-    ledpins =  [38,16,18,40,22,24,36,26,32]
+    ledpins =  (38,16,18,40,22,24,36,26,32)
     GPIO.cleanup()
     GPIO.setup( ledpins , GPIO.OUT )
     GPIO.output( ledpins , GPIO.HIGH )
