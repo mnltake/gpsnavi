@@ -49,7 +49,7 @@ GPIO.setup(key_u,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 key_y = (37 ,35 ,33 ,31 )
 key_x = (29 ,23 ,21)
 #LED
-ledpins =  (11,16,18,40,22,24,13,26,32)
+ledpins =  (38,16,18,40,22,24,36,26,32)
 #ledpins =  (38,16,18,40,22,24,36,26,32)
 #ledpins =  (36,24,22,40,18,16,38,26,32)
 GPIO.setup(ledpins,GPIO.OUT)
