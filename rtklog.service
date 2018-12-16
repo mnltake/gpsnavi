@@ -1,6 +1,6 @@
 [Unit]
 Description=RTKLOG Service
-Requires = rtkrcv.service
+Atter = rtkrcv.service ntp.service
 [Service]
 WorkingDirectory = /home/pi/gpsnavi/
 ExecStart =/home/pi/gpsnavi/gpsfile.py
