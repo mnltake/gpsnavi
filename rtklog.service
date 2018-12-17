@@ -1,6 +1,6 @@
 [Unit]
 Description=RTKLOG Service
-Requires = rtkrcv.service ntp.service
+Requires = rtkrcv.service systemd-timesyncd.service
 [Service]
 WorkingDirectory = /home/pi/gpsnavi/
 ExecStart =/home/pi/gpsnavi/rtklog.py
