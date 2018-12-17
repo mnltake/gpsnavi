@@ -1,7 +1,7 @@
 ﻿#!/usr/bin/python3
 '''
 Simple navi
-
+keypad 3*4
 
 '''
 
@@ -18,17 +18,17 @@ wide = 195  #作業機幅cm
 ax = 0 ;ay = 0;bx = 1 ;by = -1
 _ax = 0;_ay = 0;_bx = 1;_by = 0;_rad = 0
 aax = 0;aay = 0;bbx = 0;bby = 0;rrad = 0
-base = 0
+base = False
 area = 0
 c = 0
-d = 0  #枕3 :0  枕2 ：1
+d = False  #枕3 :False  枕2 ：True
 r = [[0,0]]*2
 rev = 1
 nav = 0
 nx = 0;ny = 0;nq = 0
 I = '|'
 O = ' '
-view = 0
+view = False
 now = datetime.now()
 pointfile = '/home/pi/RTKLIB/rtklog/POINTlog_{0:%Y%m%d%H%M}.pos'.format(now)
 menseki  = 0;kyori = 0;menseki_total =0
@@ -36,11 +36,11 @@ menseki  = 0;kyori = 0;menseki_total =0
 GPIO.setmode(GPIO.BOARD)
 
 #ポジションレバー
-key_u = 19
+key_u = 19 #19番ピン-GND間にマイクロスイッチを付ける
 GPIO.setup(key_u,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 #キーパッド
-key_y = (37 ,35 ,33 ,31 )
-key_x = (29 ,23 ,21)
+key_y = (37 ,35 ,33 ,31 ) #4行
+key_x = (29 ,23 ,21) #3列
 
 
 
@@ -163,11 +163,11 @@ try:
 #表示
             if view == 0  :
                 if nq == 1:
-                    print("\033[32m%s\033[0m" %fig)
+                    print("\033[32m%s\033[0m" %fig) #green
                 elif nq == 2 :
-                    print("\033[33m%s\033[0m" %fig)
+                    print("\033[33m%s\033[0m" %fig) #yellow
                 else :
-                    print("\033[31m%s\033[0m" %fig)
+                    print("\033[31m%s\033[0m" %fig) #red
                 print("\033[35m    Nav %+4d cm   工程 %d\033[0m" %(nav,koutei))
                 print(" 　LINE %s   %s　c=%d" %(revfig,blf,c)) 
                 print(" 　Q = %d  速度%4.1f km/h"  %(nq,spd*3.6))
@@ -240,12 +240,12 @@ try:
                 print("C-PointSet　%6.2f" %c)
                 time.sleep(1)
         elif ( key == 9 ): #Ex 基準線交換
-                base = ~base
+                base = not(base)
                 print("基準線を変更しました" )
                 time.sleep(1)
 
         elif ( key == 6 ):
-            d = ~d
+            d = not(d)
             print("マーカー反転")
             time.sleep(2)
 #        elif ( key == 8 ): # [#]
@@ -262,7 +262,7 @@ try:
 #            time.sleep(2)      
 
         elif ( key == 7): #表示切り替え
-            view = ~ view
+            view = not(view)
             time.sleep(1)
         elif ( key == 8):#PointSave
             fileobj = open(pointfile, "a", encoding = "utf-8")
@@ -288,5 +288,3 @@ except KeyboardInterrupt:
     pass
 sock.close()
 GPIO.cleanup()
-
-

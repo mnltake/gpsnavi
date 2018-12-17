@@ -1,20 +1,30 @@
 ﻿#!/usr/bin/python3
+'''
+トラクタ　ロータリー2ｍ
+wide = 195
+LED表示　ledarw
+圃場SHP読み込み getshp
+[3]面積[9]ID[10]圃場名[14]A-lat[15]A-lon[16]B-lat[17]B-lon
+圃場面積　作業面積　残り時間表示
+Auto pre-set baseline
+
+install pyshp Shapely pymap3d
+'''
+
 import socket , time ,math 
 from io import StringIO
 import RPi.GPIO as GPIO
 import shapefile
 from shapely.geometry.point import Point 
 from shapely.geometry import shape 
+from pymap3d.enu import  geodetic2enu
 from datetime import datetime
-from ledarw_TGS import ledarw
+from ledarw import ledarw
 from keypad import keypad_get
 
 host = '127.0.0.1' #localhost
-port = 52001 #LatLonHigh
-#host = '192.168.3.6' #tab
-#port = 52004
+port = 52001 #enu
 bufsize = 150
-#buff = StringIO()
 wide = 195  #作業機幅cm
 ax = 0 ;ay = 0;bx = 1 ;by = -1
 _ax = 0;_ay = 0;_bx = 1;_by = 0;_rad = 0
@@ -22,19 +32,19 @@ aax = 0;aay = 0;bbx = 0;bby = 0;rrad = 0
 base = 0
 area = 0
 c = 0
-d = 0  #枕3 :0  枕2 ：1
+d = False  #枕3 :false  枕2 ：True
 r = [[0,0]]*2
 rev = 1
 nav = 0
-nx = 0;ny = 0;nq = 0
+nx = 0;ny = 0;nq = 0;nh=0
 I = '|'
 O = ' '
 view = 0
 now = datetime.now()
-pointfile = '/home/pi/RTKLIB/rtklog/POINTlog_{0:%Y%m%d%H%M}.pos'.format(now)
-shpfile = '/home/pi/SHP/2019utf_WGS84.shp'
-menseki  = 0;soukou = 0;menseki_total =0
-
+pointfile = './rtklog/POINTlog_{0:%Y%m%d%H%M}.pos'.format(now)
+shpfile = './home/pi/SHP/2019utf_WGS84.shp'
+menseki  = 0;kyori = 0;menseki_total =0
+basellh = (35.73101206,139.7396917, 80.33) #RTK_BASE lat(deg) lon(deg) heigh(m)
 GPIO.setmode(GPIO.BOARD)
 
 #ポジションレバー
@@ -44,9 +54,8 @@ GPIO.setup(key_u,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 key_y = (37 ,35 ,33 ,31 )
 key_x = (29 ,23 ,21)
 #LED
-ledpins =  (11,16,18,40,22,24,13,26,32)
-#ledpins =  (38,16,18,40,22,24,36,26,32)
-#ledpins =  (36,24,22,40,18,16,38,26,32)
+ledpins =  (38,16,18,40,22,24,36,26,32) #0~6:LEDカソード　7,8:アノードコモンLR
+
 GPIO.setup(ledpins,GPIO.OUT)
 
 
@@ -76,7 +85,7 @@ def pointsave(nowpoint):
 #shp属性を取得
 def  getshp():
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.connect((host, 52002))
+    sock.connect((host, 52002))#llh
     buff = StringIO()
     data = sock.recv(bufsize)
     sock.close()
@@ -119,11 +128,12 @@ try:
                 ay = aay
                 bx = bbx
                 by = bby
-                blf = "AA-BB"
+                blf = "Auto"
                 rad = rrad
             try :
-                nx = float(nowpoint[2]) #基準点からのXｍ
-                ny = float(nowpoint[3]) #基準点からYｍ
+                nx = float(nowpoint[2]) #基準点からのeast(m)
+                ny = float(nowpoint[3]) #基準点からnorth(m)
+                nh = float(nowpoint[4]) #基準点からのup(m)
                 nq = float(nowpoint[5]) #1:FIX 2:Float 5:single
 
             except :
@@ -210,7 +220,6 @@ try:
                 print("\033[35m    Nav %+4d cm   工程 %d\033[0m" %(nav,koutei))
                 print(" 　LINE %s   %s　c=%d" %(revfig,blf,c)) 
                 print(" 　Q = %d  速度%4.1f km/h"  %(nq,spd*3.6))
-                #print("　 幅 =%d  c = %d" %(wide,c))
                 print("　残り　%3d 分" %resttime)
                 print("　圃場=%d㎡作業＝%d㎡" %(area,menseki))              
             else :
@@ -280,12 +289,12 @@ try:
                 print("C-PointSet　%6.2f" %c)
                 time.sleep(1)
         elif ( key == 9 ): #Ex 基準線交換
-                base = ~base
+                base = not(base)
                 print("基準線を変更しました" )
                 time.sleep(1)
 
         elif ( key == 6 ):
-            d = ~d
+            d = not(d)
             print("マーカー反転")
             time.sleep(2)
 #        elif ( key == 3 ): # [#]
@@ -302,7 +311,7 @@ try:
 #            time.sleep(2)      
 
         elif ( key == 7): #表示切り替え
-            view = ~ view
+            view = not(view)
             time.sleep(1)
         elif ( key == 8):#PointSave
             fileobj = open(pointfile, "a", encoding = "utf-8")
@@ -325,6 +334,14 @@ try:
             try:
                 if shpdata !=0:
                     area = shpdata[3] #4番目に面積レコード
+                    if shpdata[14] != 0:
+                        base = True
+                        (aax,aay,aah) = geodetic2enu(float(shpdata[14]) ,float(shpdata[15]) ,nh,basellh[0] ,basellh[1] ,basellh[2])
+                        (bbx,bby,bbh) = geodetic2enu(float(shpdata[16]) ,float(shpdata[17]) ,nh,basellh[0] ,basellh[1] ,basellh[2])
+                        rrad =math.atan2(( bby - aay ),( bbx - aax ))
+                        c = wide /2 -30
+                        print("Auto Set Line")
+                    time.sleep(1) 
                 else :
                     area = 0
                 time.sleep(2)
@@ -338,5 +355,3 @@ except KeyboardInterrupt:
     pass
 sock.close()
 GPIO.cleanup()
-
-

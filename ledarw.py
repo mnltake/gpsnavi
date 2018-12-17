@@ -18,9 +18,9 @@ def ledarw( arw ,ledpins):
         arw = 14
     elif arw <= -14 :
         arw = -14
-    aarw = abs(arw) / 2 - 1    
+    aarw = abs(arw) / 2 - 1
     i = 0
-    while i < aarw :
+    while i <= aarw :
         GPIO.output( pins[i], GPIO.LOW )
         i= i+1
 
@@ -59,11 +59,11 @@ if __name__ == '__main__':
     GPIO.setup( ledpins , GPIO.OUT )
     GPIO.output( ledpins , GPIO.HIGH )
     while 1:
-        for i in range(-14,15):
+        for i in range(-15,15):
             print(i)
             ledbar( i ,ledpins)
-            time.sleep(0.5)
+            time.sleep(0.2)
       
-        for j in range(-20,20):
-            ledbar( j ,ledpins)
+        for j in range(-15,15):
+            ledarw( j ,ledpins)
             time.sleep(0.2)
