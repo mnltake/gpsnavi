@@ -41,7 +41,7 @@ now = datetime.now()
 pointfile = '/home/pi/RTKLIB/rtklog/POINTlog_{0:%Y%m%d%H%M}.pos'.format(now)
 shpfile = '/home/pi/SHP/2019utf_WGS84.shp'
 menseki  = 0;kyori = 0;menseki_total =0
-base = (34.95379794,136.9351043, 87.02) #base lat(deg) lon(deg) heigh(m)
+basellh = (34.95379794,136.9351043, 87.02) #base lat(deg) lon(deg) heigh(m)
 GPIO.setmode(GPIO.BOARD)
 
 #ポジションレバー
@@ -333,10 +333,10 @@ try:
             try:
                 if shpdata !=0:
                     area = shpdata[3] #4番目に面積レコード
-                    if shpdata[] != 0:
-                        base =1
-                        (aax,aay,aah) = geodetic2enu(float(shpdata[14]) ,float(shpdata[15]) ,nh,base[0] ,base[1] ,base[2])
-                        (bbx,bby,bbh) = geodetic2enu(float(shpdata[16]) ,float(shpdata[17]) ,nh,base[0] ,base[1] ,base[2])
+                    if shpdata[14] != 0:
+                        base = 1
+                        (aax,aay,aah) = geodetic2enu(float(shpdata[14]) ,float(shpdata[15]) ,nh,basellh[0] ,basellh[1] ,basellh[2])
+                        (bbx,bby,bbh) = geodetic2enu(float(shpdata[16]) ,float(shpdata[17]) ,nh,basellh[0] ,basellh[1] ,basellh[2])
                         rrad =math.atan2(( bby - aay ),( bbx - aax ))
                         c = wide /2 -30
                         print("Auto Set Line")
