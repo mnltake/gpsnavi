@@ -26,17 +26,17 @@ wide = 195  #作業機幅cm
 ax = 0 ;ay = 0;bx = 1 ;by = -1
 _ax = 0;_ay = 0;_bx = 1;_by = 0;_rad = 0
 aax = 0;aay = 0;bbx = 0;bby = 0;rrad = 0
-base = 0
+base = False
 area = 0
 c = 0
-d = 0  #枕3 :0  枕2 ：1
+d = False  #枕3 :False  枕2 ：True
 r = [[0,0]]*2
 rev = 1
 nav = 0
 nx = 0;ny = 0;nq = 0;nh=0
 I = '|'
 O = ' '
-view = 0
+view = False
 now = datetime.now()
 pointfile = '/home/pi/RTKLIB/rtklog/POINTlog_{0:%Y%m%d%H%M}.pos'.format(now)
 shpfile = '/home/pi/SHP/2019utf_WGS84.shp'
@@ -114,7 +114,7 @@ try:
 #main           
         if (key == 0 ):
             nowpoint = setpoint()
-            if (base == 0) :
+            if (base == False) :
                 ax = _ax
                 ay = _ay
                 bx = _bx
@@ -288,12 +288,12 @@ try:
                 print("C-PointSet　%6.2f" %c)
                 time.sleep(1)
         elif ( key == 9 ): #Ex 基準線交換
-                base = ~base
+                base = not(base)
                 print("基準線を変更しました" )
                 time.sleep(1)
 
         elif ( key == 6 ):
-            d = ~d
+            d = not(d)
             print("マーカー反転")
             time.sleep(2)
 #        elif ( key == 3 ): # [#]
@@ -310,7 +310,7 @@ try:
 #            time.sleep(2)      
 
         elif ( key == 7): #表示切り替え
-            view = ~ view
+            view = not( view)
             time.sleep(1)
         elif ( key == 8):#PointSave
             fileobj = open(pointfile, "a", encoding = "utf-8")
@@ -334,7 +334,7 @@ try:
                 if shpdata !=0:
                     area = shpdata[3] #4番目に面積レコード
                     if shpdata[14] != 0:
-                        base = 1
+                        base = True
                         (aax,aay,aah) = geodetic2enu(float(shpdata[14]) ,float(shpdata[15]) ,nh,basellh[0] ,basellh[1] ,basellh[2])
                         (bbx,bby,bbh) = geodetic2enu(float(shpdata[16]) ,float(shpdata[17]) ,nh,basellh[0] ,basellh[1] ,basellh[2])
                         rrad =math.atan2(( bby - aay ),( bbx - aax ))
