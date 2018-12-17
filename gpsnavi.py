@@ -265,11 +265,7 @@ try:
             view = not(view)
             time.sleep(1)
         elif ( key == 8):#PointSave
-            fileobj = open(pointfile, "a", encoding = "utf-8")
-            savepoint = "  ".join(setpoint())
-            fileobj.write(savepoint)
-            fileobj.write("\n")
-            fileobj.close()
+            pointsave(setpoint())
             print("PointSave")
             time.sleep(1)
         elif ( key == 11):#面積リセット
