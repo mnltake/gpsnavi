@@ -1,4 +1,13 @@
 #! /user/bin/env python3
+```
+7LED * L R
+アノードコモン
+http://www.aitendo.com/product/16891
+ledpins[0:6] =１～７LEDカソード
+ledpins[7]=アノードコモン左
+ledpins[8]=アノードコモン右
+
+```
 def ledarw( arw ,ledpins):
     import RPi.GPIO as GPIO
     pins = ledpins
@@ -53,7 +62,7 @@ if __name__ == '__main__':
     import RPi.GPIO as GPIO
     import time
     GPIO.setmode(GPIO.BOARD)
-   # ledpins =  [36,24,22,40,18,16,38,26,32]
+   # ledpins =  (36,24,22,40,18,16,38,26,32)
     ledpins =  (38,16,18,40,22,24,36,26,32)
     GPIO.cleanup()
     GPIO.setup( ledpins , GPIO.OUT )
