@@ -1,9 +1,9 @@
 ﻿#!/usr/bin/python3
-'''
+"""
 Simple navi
 keypad 3*4
 
-'''
+"""
 
 import socket , time ,math 
 from io import StringIO
