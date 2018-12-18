@@ -1,10 +1,10 @@
 #!/usr/bin/env python
-```
+"""
 Pin　3・5・7・GND
 pin5をGNDにつなぐとRaspberryPiが起動する
 http://www.aitendo.com/product/11784
 shutdown-start-reboot
-```
+"""
 import RPi.GPIO as GPIO
 import os, time
 

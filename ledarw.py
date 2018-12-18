@@ -1,13 +1,13 @@
 #! /user/bin/env python3
-```
-7LED * L R
+"""
+7 LED * L R
 アノードコモン
 http://www.aitendo.com/product/16891
 ledpins[0:6] =１～７LEDカソード
 ledpins[7]=アノードコモン左
 ledpins[8]=アノードコモン右
 
-```
+"""
 def ledarw( arw ,ledpins):
     import RPi.GPIO as GPIO
     pins = ledpins
