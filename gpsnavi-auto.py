@@ -8,7 +8,7 @@ LED表示　ledarw
 圃場面積　作業面積　残り時間表示
 Auto pre-set baseline
 
-install pyshp Shapely pymap3d
+~$pip3 install pyshp Shapely pymap3d
 '''
 
 import socket , time ,math 
