@@ -29,7 +29,7 @@ wide = 195  #作業機幅cm
 ax = 0 ;ay = 0;bx = 1 ;by = -1
 _ax = 0;_ay = 0;_bx = 1;_by = 0;_rad = 0
 aax = 0;aay = 0;bbx = 0;bby = 0;rrad = 0
-base = 0
+base = False
 area = 0
 c = 0
 d = False  #枕3 :false  枕2 ：True
@@ -39,7 +39,7 @@ nav = 0
 nx = 0;ny = 0;nq = 0;nh=0
 I = '|'
 O = ' '
-view = 0
+view = False
 now = datetime.now()
 pointfile = './rtklog/POINTlog_{0:%Y%m%d%H%M}.pos'.format(now)
 shpfile = '/home/pi/SHP/2019utf_WGS84.shp'
