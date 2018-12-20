@@ -42,7 +42,7 @@ O = ' '
 view = 0
 now = datetime.now()
 pointfile = './rtklog/POINTlog_{0:%Y%m%d%H%M}.pos'.format(now)
-shpfile = './home/pi/SHP/2019utf_WGS84.shp'
+shpfile = '/home/pi/SHP/2019utf_WGS84.shp'
 menseki  = 0;kyori = 0;menseki_total =0
 basellh = (35.73101206,139.7396917, 80.33) #RTK_BASE lat(deg) lon(deg) heigh(m)
 GPIO.setmode(GPIO.BOARD)
@@ -106,7 +106,8 @@ def  getshp():
         print("NO SHP DATA")
         return 0
     except :
-        getshp()
+        print("getshp error")
+        return 0
         
 try:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
