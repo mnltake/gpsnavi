@@ -1,12 +1,9 @@
 #!/usr/bin/python3
 import socket ,os
-from io import StringIO
 from datetime import datetime
 host = '127.0.0.1' #localhost
 port = 52002
 bufsize = 150
-buff = StringIO()
-
 
 try:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
