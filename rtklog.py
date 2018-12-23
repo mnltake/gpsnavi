@@ -1,10 +1,10 @@
 #!/usr/bin/python3
-import socket ,os
+import socket ,os,time
 from datetime import datetime
 host = '127.0.0.1' #localhost
 port = 52002
 bufsize = 150
-
+time.sleep(60)
 try:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((host, port))
