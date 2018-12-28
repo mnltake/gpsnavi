@@ -2,7 +2,7 @@
 '''
 トラクタ　ロータリー2ｍ
 wide = 195
-LED表示　ledarw_AT
+LED表示　ledarw
 圃場SHP読み込み getshp
 [0]連番[1]面積[2]ID[3]圃場名[5]A-lat[6]A-lon[7]B-lat[8]B-lon
 圃場面積　作業面積　残り時間表示
@@ -22,52 +22,8 @@ from pymap3d.enu import  geodetic2enu
 from datetime import datetime
 from ledarw import ledarw
 from keypad import keypad_get
-
-#MPU6050
 from MPU6050 import MPU6050
-i2c_bus = 1 #pin3=SDA pin5=SCL
-device_address = 0x68
-#キャリブレーション数値設定
-x_accel_offset = -1878
-y_accel_offset = -657
-z_accel_offset = -872
-x_gyro_offset = 72
-y_gyro_offset = -12
-z_gyro_offset = 23
 
-enable_debug_output = False
-mpu = MPU6050(i2c_bus, device_address, x_accel_offset, y_accel_offset,
-              z_accel_offset, x_gyro_offset, y_gyro_offset, z_gyro_offset,
-              enable_debug_output)
-mpu.dmp_initialize()
-mpu.set_DMP_enabled(True)#DMP (Digital Motion Processor) 
-mpu_int_status = mpu.get_int_status()
-packet_size = mpu.DMP_get_FIFO_packet_size()
-FIFO_buffer = [0]*64
-FIFO_count_list = list()
-
-def slope_MPU(ant_h):
-    FIFO_count = mpu.get_FIFO_count()
-    mpu_int_status = mpu.get_int_status()
-    if (FIFO_count == 1024) or (mpu_int_status & 0x10):
-        mpu.reset_FIFO()
-        return None
-    elif (mpu_int_status & 0x02):
-        while FIFO_count < packet_size:
-            FIFO_count = mpu.get_FIFO_count()
-        FIFO_buffer = mpu.get_FIFO_bytes(packet_size)
-        accel = mpu.DMP_get_acceleration_int16(FIFO_buffer)
-        quat = mpu.DMP_get_quaternion_int16(FIFO_buffer)
-        grav = mpu.DMP_get_gravity(quat)
-        roll_pitch_yaw = mpu.DMP_get_roll_pitch_yaw(quat, grav)
-        keisya_rad=roll_pitch_yaw.x
-        #kei=roll_pitch_yaw.y
-        #kei=roll_pitch_yaw.z
-        slope = ant_h * math.sin(keisya_rad)
-        if slope > 50:
-            return None
-        return slope
-      
 
 
 host = '127.0.0.1' #localhost
@@ -161,7 +117,52 @@ def  getshp():
     except :
         #print("getshp error")
         return 0
-        
+
+#MPU6050
+i2c_bus = 1 #pin3=SDA pin5=SCL
+device_address = 0x68
+#キャリブレーション数値設定
+x_accel_offset = -1878
+y_accel_offset = -657
+z_accel_offset = -872
+x_gyro_offset = 72
+y_gyro_offset = -12
+z_gyro_offset = 23
+
+enable_debug_output = False
+mpu = MPU6050(i2c_bus, device_address, x_accel_offset, y_accel_offset,
+              z_accel_offset, x_gyro_offset, y_gyro_offset, z_gyro_offset,
+              enable_debug_output)
+mpu.dmp_initialize()
+mpu.set_DMP_enabled(True)#DMP (Digital Motion Processor) 
+mpu_int_status = mpu.get_int_status()
+packet_size = mpu.DMP_get_FIFO_packet_size()
+FIFO_buffer = [0]*64
+FIFO_count_list = list()
+#傾斜cm取得
+def slope_MPU(ant_h):
+    FIFO_count = mpu.get_FIFO_count()
+    mpu_int_status = mpu.get_int_status()
+    if (FIFO_count == 1024) or (mpu_int_status & 0x10):
+        mpu.reset_FIFO()
+        return None
+    elif (mpu_int_status & 0x02):
+        while FIFO_count < packet_size:
+            FIFO_count = mpu.get_FIFO_count()
+        FIFO_buffer = mpu.get_FIFO_bytes(packet_size)
+        accel = mpu.DMP_get_acceleration_int16(FIFO_buffer)
+        quat = mpu.DMP_get_quaternion_int16(FIFO_buffer)
+        grav = mpu.DMP_get_gravity(quat)
+        roll_pitch_yaw = mpu.DMP_get_roll_pitch_yaw(quat, grav)
+        keisya_rad=roll_pitch_yaw.x
+        #keisya_rad=roll_pitch_yaw.y
+        #keisya_rad=roll_pitch_yaw.z
+        slope = ant_h * math.sin(keisya_rad)
+        if slope > 50:
+            return None
+        return slope
+      
+
 try:
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect((host, port))
