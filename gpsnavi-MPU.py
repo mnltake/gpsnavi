@@ -121,7 +121,7 @@ def  getshp():
 #MPU6050
 i2c_bus = 1 #pin3=SDA pin5=SCL
 device_address = 0x68
-#キャリブレーション数値設定
+#キャリブレーション数値設定 水平に置き　MPU6050_cal.py　を実行し計算結果を代入
 x_accel_offset = -1878
 y_accel_offset = -657
 z_accel_offset = -872
