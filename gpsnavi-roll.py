@@ -49,7 +49,7 @@ O = ' '
 view = False
 now = datetime.now()
 pointfile = '/home/pi/RTKLIB/rtklog/POINTlog_{0:%Y%m%d%H%M}.pos'.format(now)
-shpfile = '/home/pi/SHP/2019utf_WGS84_ref.shp'
+shpfile = '/home/pi/SHP/2019utf_WGS84_AB.shp'
 menseki  = 0;kyori = 0;menseki_total =0
 basellh = (34.0000000,136.000000,87.00) #RTK_BASE lat(deg) lon(deg) heigh(m)
 GPIO.setmode(GPIO.BOARD)
@@ -140,7 +140,7 @@ packet_size = mpu.DMP_get_FIFO_packet_size()
 FIFO_buffer = [0]*64
 FIFO_count_list = list()
 #傾斜cm取得
-def slope_MPU(ant_h):
+def roll_MPU(ant_h):
     FIFO_count = mpu.get_FIFO_count()
     mpu_int_status = mpu.get_int_status()
     if (FIFO_count == 1024) or (mpu_int_status & 0x10):
@@ -157,10 +157,8 @@ def slope_MPU(ant_h):
         keisya_rad=roll_pitch_yaw.x
         #keisya_rad=roll_pitch_yaw.y
         #keisya_rad=roll_pitch_yaw.z
-        slope = ant_h * math.sin(keisya_rad)
-        if slope > 50:
-            return None
-        return slope
+        rollcm = ant_h * math.sin(keisya_rad)
+        return rollcm
       
 
 try:
@@ -227,13 +225,13 @@ try:
                revfig = "▶" 
             arw =  nav * rev
 #傾斜計算
-            nslope = slope_MPU(ant_h)
-            while nslope == None :
-                nslope = slope_MPU(ant_h)
+            nrollcm = roll_MPU(ant_h)
+            while nrollcm == None :
+                nrollcm = roll_MPU(ant_h)
             else:
-                keisya  = nslope - hori
+                keisya  = nrollcm - hori
             arw -= keisya # [-=]:左上がりで正　[+=]:右上がりで正
-            nav_slope = arw * rev
+            nav_roll = arw * rev
             
             level = abs(int (arw / 2))
             w = 13
@@ -283,7 +281,7 @@ try:
                 else :
                     print("\033[31m%s\033[0m" %fig)
 #                print("\033[35m    Nav %+4d cm   工程 %d\033[0m" %(nav,koutei))
-                print("\033[35m    Nav %+4d cm   工程 %d\033[0m" %(nav_slope,koutei))
+                print("\033[35m    Nav %+4d cm   工程 %d\033[0m" %(nav_roll,koutei))
                 print("  傾斜 =%+3d　LINE %s %s　" %(keisya,revfig,blf)) 
                 print("  c=%d　速度%4.1f km/h"  %(c,spd*3.6))
                 print("　残り　%3d 分" %resttime)
@@ -418,7 +416,7 @@ try:
                 time.sleep(2)
                 
             except:
-                print("getshp error")
+                print("Auto set error")
                 time.sleep(1)
 except socket.error:
     print('socket error')
