@@ -335,11 +335,12 @@ try:
             try:
                 if shpdata !=0:
                     area = shpdata[3] #4番目に面積レコード
-                    if shpdata[14] != 0:
-                        base = True
+                    if float(shpdata[14]) != 0:
+                        
                         (aax,aay,aah) = geodetic2enu(float(shpdata[14]) ,float(shpdata[15]) ,nh,basellh[0] ,basellh[1] ,basellh[2])
                         (bbx,bby,bbh) = geodetic2enu(float(shpdata[16]) ,float(shpdata[17]) ,nh,basellh[0] ,basellh[1] ,basellh[2])
                         rrad =math.atan2(( bby - aay ),( bbx - aax ))
+                        base = True
                         c = wide /2 -30
                         print("Auto Set Line")
                     time.sleep(1) 
@@ -347,7 +348,7 @@ try:
                     area = 0
                 time.sleep(2)
             except:
-                print("getshp error")
+                print("Auto set error")
                 time.sleep(1)
 except socket.error:
     print('socket error')
