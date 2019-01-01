@@ -33,6 +33,7 @@ wide = 195  #作業機幅cm
 hori = 0 #水平補正
 keisya = 0
 ant_h = 200 #アンテナ高さcm
+margin = 20 #shpとの余裕分cm
 ax = 0 ;ay = 0;bx = 1 ;by = -1
 _ax = 0;_ay = 0;_bx = 1;_by = 0;_rad = 0
 aax = 0;aay = 0;bbx = 0;bby = 0;rrad = 0
@@ -349,7 +350,7 @@ try:
                 print("Set error")
                 time.sleep(1)                
         elif ( key == 3 ): #0補正
-                c =  nav +c   
+                c +=  nav_roll   
                 print("C-PointSet　%6.2f" %c)
                 time.sleep(1)
         elif ( key == 9 ): #Ex 基準線交換
@@ -394,6 +395,12 @@ try:
             menseki = 0
             print("作業面積リセット")
             time.sleep(2)
+
+#        elif ( key == 10):#half
+#            c += wide/2
+#            print("Half Wide Offset")
+#            time.sleep(2)
+
         elif ( key == 10):#距離リセット
             kyori = 0
             print("走行距離リセット")
@@ -408,7 +415,7 @@ try:
                         (bbx,bby,bbh) = geodetic2enu(float(shpdata[7]) ,float(shpdata[8]) ,nh,basellh[0] ,basellh[1] ,basellh[2])
                         rrad =math.atan2(( bby - aay ),( bbx - aax ))
                         base = True
-                        c = wide /2 -20
+                        c = wide /2 -margin
                         print("Auto Set Line")
                     time.sleep(1) 
                 else :
