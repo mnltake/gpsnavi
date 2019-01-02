@@ -9,7 +9,7 @@ LED表示　ledarw
 Auto pre-set baseline
 機体傾斜補正MPU60503軸ジャイロ　I2c 
 
-install pyshp Shapely pymap3d
+pip3 install pyshp Shapely pymap3d
 '''
 
 import socket , time ,math 
@@ -30,7 +30,7 @@ host = '127.0.0.1' #localhost
 port = 52001 #enu
 bufsize = 150
 wide = 195  #作業機幅cm
-hori = 0 #水平補正
+hori = 0 #水平補正値cm
 keisya = 0
 ant_h = 200 #アンテナ高さcm
 margin = 20 #shpとの余裕分cm
@@ -39,13 +39,13 @@ _ax = 0;_ay = 0;_bx = 1;_by = 0;_rad = 0
 aax = 0;aay = 0;bbx = 0;bby = 0;rrad = 0
 base = False
 area = 0
-c = 0
-d = False  #枕3 :false  枕2 ：True
+c = 0 #offset cm
+d = False  #マーカー方向　枕3工程 :False  枕2工程 ：True 
 r = [[0,0]]*2
 rev = 1
 nav = 0
-nx = 0;ny = 0;nq = 0;nh=0
-I = '|'
+nx = 0;ny = 0;nq = 0;nh = 0
+I = '|' #level
 O = ' '
 view = False
 now = datetime.now()
@@ -64,10 +64,14 @@ key_x = (29 ,23 ,21)
 #LED
 ledpins =  (24,40,38,26,36,32,32,22,18) #0~6:LEDカソード　7,8:アノードコモンLR
 GPIO.setup(ledpins,GPIO.OUT)
-#BlueTooth
-GPIO.setup( 12 ,GPIO.OUT)
-GPIO.output ( 12 , GPIO.HIGH )
 
+#キャリブレーション数値設定 水平に置き　MPU6050_cal.py　を実行し計算結果を代入
+x_accel_offset = -1878
+y_accel_offset = -657
+z_accel_offset = -872
+x_gyro_offset = 72
+y_gyro_offset = -12
+z_gyro_offset = 23
 
 #座標取得
 def setpoint():
@@ -122,13 +126,7 @@ def  getshp():
 #MPU6050
 i2c_bus = 1 #pin3=SDA pin5=SCL
 device_address = 0x68
-#キャリブレーション数値設定 水平に置き　MPU6050_cal.py　を実行し計算結果を代入
-x_accel_offset = -1878
-y_accel_offset = -657
-z_accel_offset = -872
-x_gyro_offset = 72
-y_gyro_offset = -12
-z_gyro_offset = 23
+
 
 enable_debug_output = False
 mpu = MPU6050(i2c_bus, device_address, x_accel_offset, y_accel_offset,
@@ -155,7 +153,7 @@ def roll_MPU(ant_h):
         quat = mpu.DMP_get_quaternion_int16(FIFO_buffer)
         grav = mpu.DMP_get_gravity(quat)
         roll_pitch_yaw = mpu.DMP_get_roll_pitch_yaw(quat, grav)
-        keisya_rad=roll_pitch_yaw.x
+        keisya_rad=roll_pitch_yaw.x #MPUの置き方によってx,y,zのうち適切なものを
         #keisya_rad=roll_pitch_yaw.y
         #keisya_rad=roll_pitch_yaw.z
         rollcm = ant_h * math.sin(keisya_rad)
@@ -231,7 +229,7 @@ try:
                 nrollcm = roll_MPU(ant_h)
             else:
                 keisya  = nrollcm - hori
-            arw -= keisya # [-=]:左上がりで正　[+=]:右上がりで正
+            arw -= keisya # [-=]:左上がりでkeisya>0　[+=]:右上がりでkeisya>0
             nav_roll = arw * rev
             
             level = abs(int (arw / 2))
@@ -396,7 +394,7 @@ try:
             print("作業面積リセット")
             time.sleep(2)
 
-#        elif ( key == 10):#half
+#        elif ( key == 10):#half 一本飛ばし耕　wideを2倍にして折り返し時にwide/2分オフセット
 #            c += wide/2
 #            print("Half Wide Offset")
 #            time.sleep(2)
