@@ -25,12 +25,12 @@ https://github.com/mnltake/gpsnavi/blob/master/autostart_setting.txt
 
 **Only straight line not curve** 
 
-But
+BUT
 
 **Any Tablet/Smartphone(windows,android,iOS..)　can use,** because it's used only VNC(Virtual Network Computing)Viewer and 3G/LTE tethering.Everything is calculated on Raspberry Pi.
 
 **No USB port need.You can use for charge**
 
-and
+AND
 
-**Software costs are free**
+**Software costs are free!!**
