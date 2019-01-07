@@ -1,7 +1,7 @@
 RTK-GPS/GNSS guidance for agriculture tractor  by python code
 
 powered by RTKLIB
-
+https://github.com/tomojitakasu/RTKLIB
 
 How to use
 
@@ -18,3 +18,20 @@ https://www.youtube.com/watch?v=y36dDZJX1TM&feature=youtu.be
 Auto start settiing
 
 https://github.com/mnltake/gpsnavi/blob/master/autostart_setting.txt
+
+**Only guidance not auto-pilot (yet)**
+
+**Only CUI not GUI**
+
+**Only straight line not curve** 
+
+BUT
+
+**Any Tablet/Smartphone(windows,android,iOS..)　can use,** because it's used only VNC(Virtual Network Computing)Viewer and 3G/LTE tethering.Everything is calculated on Raspberry Pi.
+
+**No USB port need.You can use for charge**
+
+AND
+
+**Software costs are free!!**
+**You can change as you like**
