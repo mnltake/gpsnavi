@@ -35,3 +35,5 @@ AND
 
 **Software costs are free!!**
 **You can change as you like**
+
+![image](https://github.com/mnltake/gpsnavi/blob/master/image.png)
