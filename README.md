@@ -25,6 +25,8 @@ https://github.com/mnltake/gpsnavi/blob/master/autostart_setting.txt
 
 **Only straight line not curve** 
 
+**Only 2D field not 3D**
+
 BUT
 
 **Any Tablet/Smartphone(windows,android,iOS..)　can use,** because it's used only VNC(Virtual Network Computing)Viewer and 3G/LTE tethering.Everything is calculated on Raspberry Pi.
