@@ -233,7 +233,7 @@ try:
             arw -= keisya # [-=]:左上がりでkeisya>0　[+=]:右上がりでkeisya>0
             nav_roll = arw * rev
 #arw反転
-            arw　*=　wra              
+            arw *= wra              
 
             level = abs(int (arw / 2))
             w = 13
