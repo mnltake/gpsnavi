@@ -29,23 +29,24 @@ from MPU6050 import MPU6050
 host = '127.0.0.1' #localhost
 port = 52001 #enu
 bufsize = 150
-wide = 195  #作業機幅cm
-hori = 0 #水平補正値cm
+wide = 195 #作業機幅cm
+hori = 5 #水平補正
 keisya = 0
-ant_h = 200 #アンテナ高さcm
+ant_h = 220 #アンテナ高さcm
 margin = 20 #shpとの余裕分cm
 ax = 0 ;ay = 0;bx = 1 ;by = -1
 _ax = 0;_ay = 0;_bx = 1;_by = 0;_rad = 0
 aax = 0;aay = 0;bbx = 0;bby = 0;rrad = 0
 base = False
 area = 0
-c = 0 #offset cm
-d = False  #マーカー方向　枕3工程 :False  枕2工程 ：True 
+c = 0 #offset cm →｜←
+d = True  #マーカー方向　枕2工程 :False  枕3工程 ：True
+wra = -1 #levelは操舵方向：−１　　levelはズレ方向：+1
 r = [[0,0]]*2
 rev = 1
 nav = 0
-nx = 0;ny = 0;nq = 0;nh = 0
-I = '|' #level
+nx = 0;ny = 0;nq = 0;nh= 0
+I = '|'#level
 O = ' '
 view = False
 now = datetime.now()
@@ -56,7 +57,7 @@ basellh = (34.0000000,136.000000,87.00) #RTK_BASE lat(deg) lon(deg) heigh(m)
 GPIO.setmode(GPIO.BOARD)
 
 #ポジションレバー
-key_u = 19
+key_u = 12
 GPIO.setup(key_u,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 #キーパッド
 key_y = (37 ,35 ,33 ,31 )
@@ -65,13 +66,7 @@ key_x = (29 ,23 ,21)
 ledpins =  (24,40,38,26,36,32,32,22,18) #0~6:LEDカソード　7,8:アノードコモンLR
 GPIO.setup(ledpins,GPIO.OUT)
 
-#キャリブレーション数値設定 水平に置き　MPU6050_cal.py　を実行し計算結果を代入
-x_accel_offset = -1878
-y_accel_offset = -657
-z_accel_offset = -872
-x_gyro_offset = 72
-y_gyro_offset = -12
-z_gyro_offset = 23
+
 
 #座標取得
 def setpoint():
@@ -126,7 +121,13 @@ def  getshp():
 #MPU6050
 i2c_bus = 1 #pin3=SDA pin5=SCL
 device_address = 0x68
-
+#キャリブレーション数値設定 水平に置き　MPU6050_cal.py　を実行し計算結果を代入
+x_accel_offset = -2085
+y_accel_offset = -2322
+z_accel_offset = 1122
+x_gyro_offset = 71
+y_gyro_offset = -24
+z_gyro_offset = 25
 
 enable_debug_output = False
 mpu = MPU6050(i2c_bus, device_address, x_accel_offset, y_accel_offset,
@@ -225,16 +226,18 @@ try:
             arw =  nav * rev
 #傾斜計算
             nrollcm = roll_MPU(ant_h)
-            while nrollcm == None :
+            while (nrollcm == None) or (nrollcm > 50)  :
                 nrollcm = roll_MPU(ant_h)
             else:
                 keisya  = nrollcm - hori
             arw -= keisya # [-=]:左上がりでkeisya>0　[+=]:右上がりでkeisya>0
             nav_roll = arw * rev
-            
+#arw反転
+            arw　*=　wra              
+
             level = abs(int (arw / 2))
             w = 13
-               
+
             if  w <= arw  :
                 fig = O * w + "▲" + I * w
             elif 2 <= arw  < 20:
@@ -268,7 +271,8 @@ try:
                 resttime = 999
             if (resttime > 999):
                 resttime =999
-            
+            elif (resttime < -99):
+                resttime = -99
 #LED
             ledarw( arw , ledpins)       
 #表示
@@ -359,7 +363,7 @@ try:
         elif ( key == 6 ):
             d = not(d)
             print("マーカー反転")
-            time.sleep(2)
+            time.sleep(1)
 #        elif ( key == 3 ): # [#]
 #            print("シャットダウン")
 #            time.sleep(2)
@@ -392,9 +396,9 @@ try:
         elif ( key == 11):#面積リセット
             menseki = 0
             print("作業面積リセット")
-            time.sleep(2)
+            time.sleep(1)
 
-#        elif ( key == 10):#half 一本飛ばし耕　wideを2倍にして折り返し時にwide/2分オフセット
+#        elif ( key == 10):#half
 #            c += wide/2
 #            print("Half Wide Offset")
 #            time.sleep(2)
@@ -402,7 +406,7 @@ try:
         elif ( key == 10):#距離リセット
             kyori = 0
             print("走行距離リセット")
-            time.sleep(2)
+            time.sleep(1)
         elif ( key == 12):#shp属性を取る
             shpdata=getshp()
             try:
@@ -413,12 +417,13 @@ try:
                         (bbx,bby,bbh) = geodetic2enu(float(shpdata[7]) ,float(shpdata[8]) ,nh,basellh[0] ,basellh[1] ,basellh[2])
                         rrad =math.atan2(( bby - aay ),( bbx - aax ))
                         base = True
-                        c = wide /2 -margin
+                        c = -wide /2 -margin #4工程から開始
+                        menseki = 0
                         print("Auto Set Line")
                     time.sleep(1) 
                 else :
                     area = 0
-                time.sleep(2)
+                time.sleep(1)
                 
             except:
                 print("Auto set error")
