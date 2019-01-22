@@ -42,6 +42,7 @@ area = 0
 c = 0 #offset cm →｜←
 d = True  #マーカー方向　枕2工程 :False  枕3工程 ：True
 wra = -1 #levelは操舵方向：−１　　levelはズレ方向：+1
+wra *= 2/2 #level１本　2/2:2cm　2/3:3cm 2/4:4cm
 r = [[0,0]]*2
 rev = 1
 nav = 0
