@@ -74,3 +74,6 @@ AND
 |**【オプションBluetooth出力】**||
 |RN-42使用　Bluetooth無線モジュール|2222|http://akizukidenshi.com/catalog/g/gK-07378/|
 |必要に応じてUSB延長ケーブル、スマホホルダー||
+
+配線図
+![image](https://github.com/mnltake/gpsnavi/blob/master/Pi_gpsnavi.png)
