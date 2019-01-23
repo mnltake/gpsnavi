@@ -40,7 +40,7 @@ AND
 
 ![image](https://github.com/mnltake/gpsnavi/blob/master/image.png)
 
-#材料一覧#
+材料一覧
 
 | 品名             | 参考価格円 （税抜き送料別） |        入手先        |
 |:-----------------|------------------:|:------------------:|
@@ -77,3 +77,4 @@ AND
 
 配線図
 ![image](https://github.com/mnltake/gpsnavi/blob/master/Pi_gpsnavi.png)
+![image](https://github.com/mnltake/gpsnavi/blob/master/wiring.png)
