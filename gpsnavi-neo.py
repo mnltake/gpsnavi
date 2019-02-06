@@ -290,7 +290,7 @@ try:
 #LED
             ledarw( arw , ledpins)       
 #neopixcel LED
-            color_arw (strip , arw)
+            colorarw (strip , arw)
 #表示
             if view == 0  :
                 if nq == 1:
