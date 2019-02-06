@@ -60,14 +60,17 @@ basellh = (34.0000000,136.000000,87.00) #RTK_BASE lat(deg) lon(deg) heigh(m)
 GPIO.setmode(GPIO.BOARD)
 
 #ポジションレバー
-key_u = 12
+key_u = 16
 GPIO.setup(key_u,GPIO.IN,pull_up_down=GPIO.PUD_UP)
+
 #キーパッド
 key_y = (37 ,35 ,33 ,31 )
 key_x = (29 ,23 ,21)
+
 #LED
 ledpins =  (24,40,38,26,36,32,32,22,18) #0~6:LEDカソード　7,8:アノードコモンLR
 GPIO.setup(ledpins,GPIO.OUT)
+
 # neopixcel LED strip 
 LED_COUNT      = 13     # Number of LED pixels.
 LED_PIN        = 18      # GPIO pin connected to the pixels (18 uses PWM!)=Pin12(BOARD)
