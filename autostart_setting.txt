@@ -31,3 +31,11 @@ sudo mv shutdownbuttond.service /etc/systemd/system
 sudo systemctl daemon-reload
 sudo systemctl start shutdownbuttond.service
 sudo systemctl enable shutdownbuttond.service
+
+#(rover gpsnavi import module)
+sudo apt-get install libgeos-dev
+sudo pip3 install pyshp Shapely pymap3d rpi_ws281x
+
+#(rover bluetooth SPP module )
+sudo nano /boot/config.txt
++ dtoverlay=pi3-disable-bt
