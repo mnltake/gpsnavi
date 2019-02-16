@@ -27,7 +27,7 @@ nano ~/.config/lxsession/LXDE-pi/autostart
  
 
 #(shutdownbutton)
-sudo mv shutdownd.service /etc/systemd/system
+sudo mv shutdownbuttond.service /etc/systemd/system
 sudo systemctl daemon-reload
 sudo systemctl start shutdownd.service
 sudo systemctl enable shutdownd.service
