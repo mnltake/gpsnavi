@@ -9,7 +9,7 @@ LED表示　ledarw
 Auto pre-set baseline
 機体傾斜補正MPU60503軸ジャイロ　I2c 
 neopixelLED (要sudo)
-
+sudo apt-get install libgeos-dev
 sudo pip3 install pyshp Shapely pymap3d rpi_ws281x
 '''
 

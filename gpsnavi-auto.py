@@ -7,7 +7,7 @@ LED表示　ledarw
 [3]面積[9]ID[10]圃場名[14]A-lat[15]A-lon[16]B-lat[17]B-lon
 圃場面積　作業面積　残り時間表示
 Auto pre-set baseline
-
+~$sudo apt-get install libgeos-dev
 ~$pip3 install pyshp Shapely pymap3d
 '''
 
