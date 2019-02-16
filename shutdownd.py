@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python3
 """
 Pin　7・5・11・GND
 pin5をGNDにつなぐとRaspberryPiが起動する
