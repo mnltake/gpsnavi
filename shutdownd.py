@@ -10,9 +10,9 @@ import os, time
 
 GPIO.setmode(GPIO.BOARD)
 
-# Pin7 : shutdown button
+# Pin7 : reboot button
 GPIO.setup(7, GPIO.IN, pull_up_down = GPIO.PUD_UP)
-# Pin11 : reboot button
+# Pin11 : shutdown button
 GPIO.setup(11, GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
 def shutdown(channel):
@@ -21,8 +21,8 @@ def shutdown(channel):
 def reboot(channel):
   os.system("sudo reboot")
 
-GPIO.add_event_detect(7, GPIO.FALLING, callback = shutdown, bouncetime = 2000)
-GPIO.add_event_detect(11, GPIO.FALLING, callback = reboot, bouncetime = 2000)
+GPIO.add_event_detect(7, GPIO.FALLING, callback = reboot, bouncetime = 2000)
+GPIO.add_event_detect(11, GPIO.FALLING, callback = shutdown, bouncetime = 2000)
 
 while 1:
   time.sleep(100)
