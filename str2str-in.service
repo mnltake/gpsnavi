@@ -1,0 +1,13 @@
+[Unit]
+Description=STR2STR Protocol In to Reciver Service
+Requires = network.target
+[Service]
+WorkingDirectory = /home/pi/gpsnavi/
+ExecStart =/home/pi/gpsnavi/str2str-in.sh
+#TimeoutStopSec =10s
+Restart=always
+RestartSec = 10s
+Type=simple
+
+[Install]
+WantedBy=multi-user.target
