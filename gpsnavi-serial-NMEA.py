@@ -328,7 +328,7 @@ try:
                 elif nq == 5 :
                     print("\033[33m%s\033[0m" %fig)
                 else :
-                    print("\033[31m%s\033[0m" %fig)
+                    print(fig)
 #                print("                  %2d.%2d" %(nowmsg.timestamp.second ,nowmsg.timestamp.microsecond/100000))
                 print("\033[35m    Nav %+4d cm   工程 %d\033[0m" %(nav_roll,koutei))
                 print("  傾斜 =%+3d　LINE %s %s　" %(keisya,revfig,blf)) 
