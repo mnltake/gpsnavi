@@ -10,7 +10,7 @@ Auto pre-set baseline
 機体傾斜補正MPU60503軸ジャイロ　I2c 
 #neopixelLED 
 1本飛ばし
-NMEA Serial(dev/ttyUSB0)入力
+NMEA Serial(dev/ttyACM0)入力
 
 pip3 install pyshp Shapely pymap3d rpi_ws281x pyserial pynmea
 '''
@@ -160,7 +160,47 @@ def roll_MPU(ant_h):
         #keisya_rad=roll_pitch_yaw.z
         rollcm = ant_h * math.sin(keisya_rad) -hori
         return rollcm 
+ #wait NTPtimeSet
+def wait_NTP():
+    try:
+        ntpnow=datetime.now()
+        (nowpoint ,nowmsg) =setpoint()
+        ntpMS="{0:%M%S}".format(ntpnow)
+        gpsMS="{0:%M%S}".format(nowmsg.timestamp)
+        if (ntpMS != gpsMS):
+            return True
+        else:
+            return False
+    except:
+        return True
     
+#make file
+def make_file():
+    now =datetime.now()
+    folder  = '/home/pi/gpsnavi_AT/log/ATlog_{0:%Y%m}/'.format(now)
+    file = '{0:%m%d-%H%M}.csv'.format(now)
+    print(file)
+    if not os.path.exists(folder):
+        os.makedirs(folder)
+    return folder,file
+
+#ファイル保存
+def write_file(nowmsg):
+    savepoint =str(datetime.now())+"\t"+str(nowmsg.timestamp)+"\t"+str(nowmsg.longitude)+"\t"+str(nowmsg.latitude)+"\t"+str(nowmsg.altitude)+"\t"+str(nowmsg.gps_qual)+"\n"
+    #print(savepoint)
+    with open(folder + file, "a", encoding = "utf-8") as fileobj:
+        fileobj.write(savepoint)
+
+                
+      
+#time.sleep(10)
+try:
+    while wait_NTP():　#NTPの同期を待つ
+        print("waiting NTP ")
+        time.sleep(1)
+    print("NTP synchro")
+    (folder,file)=make_file() #LOGファイルYYmm/mmDD-HHMM.csv
+   
       
 
 try:
@@ -303,7 +343,8 @@ try:
                     print("\033[33m%s\033[0m" %fig)
                 else :
                     print("\033[31m%s\033[0m" %fig)
-            
+# ファイル保存
+            write_file(nowmsg)            
            
 #key入力時
 
@@ -429,5 +470,5 @@ try:
 
 except KeyboardInterrupt:
     pass
-
+GPIO.cleanup()
 
