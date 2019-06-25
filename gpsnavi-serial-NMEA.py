@@ -31,7 +31,7 @@ from neopixel_arw import colorarw
 import pynmea2
 
 
-WIDE = 100#作業機幅cm
+WIDE = 345#作業機幅cm
 wide = WIDE
 hori = 5 #水平補正
 keisya = 0
