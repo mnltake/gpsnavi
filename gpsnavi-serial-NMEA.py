@@ -2,7 +2,7 @@
 '''
 トラクタ　ハロー3.6ｍ
 WIDE = 345
-LED表示　ledarw_AT
+LED表示　ledarw
 圃場SHP読み込み getshp
 [0]連番[1]面積[2]ID[3]圃場名[5]A-lat[6]A-lon[7]B-lat[8]B-lon
 圃場面積　作業面積　残り時間表示
@@ -83,7 +83,7 @@ LED_CHANNEL    = 0
 #strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
 #strip.begin()
 
-#座標取得
+#座標取得Serial(dev/ttyACM0)入力
 def setpoint():
     with serial.Serial('/dev/ttyACM0', 115200, timeout=1) as ser:
         try:
@@ -177,7 +177,7 @@ def wait_NTP():
 #make file
 def make_file():
     now =datetime.now()
-    folder  = '/home/pi/gpsnavi_AT/log/ATlog_{0:%Y%m}/'.format(now)
+    folder  = '/home/pi/gpsnavi/log/{0:%Y%m}/'.format(now)
     file = '{0:%m%d-%H%M}.csv'.format(now)
     print(file)
     if not os.path.exists(folder):
@@ -186,24 +186,21 @@ def make_file():
 
 #ファイル保存
 def write_file(nowmsg):
-    savepoint =str(datetime.now())+"\t"+str(nowmsg.timestamp)+"\t"+str(nowmsg.longitude)+"\t"+str(nowmsg.latitude)+"\t"+str(nowmsg.altitude)+"\t"+str(nowmsg.gps_qual)+"\n"
+    savepoint =str(datetime.now())+","+str(nowmsg.timestamp)+","+str(nowmsg.longitude)+","+str(nowmsg.latitude)+","+str(nowmsg.altitude)+","+str(nowmsg.gps_qual)+"\n"
     #print(savepoint)
     with open(folder + file, "a", encoding = "utf-8") as fileobj:
         fileobj.write(savepoint)
 
-                
-      
-#time.sleep(10)
 try:
     while wait_NTP():　#NTPの同期を待つ
         print("waiting NTP ")
         time.sleep(1)
     print("NTP synchro")
     (folder,file)=make_file() #LOGファイルYYmm/mmDD-HHMM.csv
+    header ="JST,UTC,longitude,latitude,altitude,gps_qual\n" 
+    with open(folder + file, "a", encoding = "utf-8") as fileobj:
+        fileobj.write(header)
    
-      
-
-try:
     while True:
         key = keypad_get(*key_x, *key_y)
 #main           
