@@ -22,6 +22,8 @@ sudo mv rtklog.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl start rtklog.service
 sudo systemctl enable rtklog.service
+mkdir -p ~/.config/lxsession/LXDE-pi
+cp /etc/xdg/lxsession/LXDE-pi/autostart ~/.config/lxsession/LXDE-pi/
 nano ~/.config/lxsession/LXDE-pi/autostart
 ＋　@/home/pi/gpsnavi/gpsnavi.sh
  
