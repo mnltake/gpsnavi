@@ -35,8 +35,8 @@ sudo systemctl start shutdownbuttond.service
 sudo systemctl enable shutdownbuttond.service
 
 #(rover gpsnavi import module)
-sudo apt-get install libgeos-dev
-sudo pip3 install pyshp Shapely pymap3d rpi_ws281x
+sudo apt-get install libgeos-dev python3-numpy
+sudo pip3 install pyshp Shapely pymap3d rpi_ws281x pymap3d
 
 #(rover bluetooth SPP module )
 sudo nano /boot/config.txt
