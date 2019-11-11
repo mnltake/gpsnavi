@@ -1,50 +1,3 @@
-__author__ = 'Geir Istad'
-
-'''
-MPU6050 Python I2C Class
-Copyright (c) 2015 Geir Istad
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-
-Code based on I2Cdev library collection - MPU6050 I2C device class
-by Jeff Rowberg <jeff@rowberg.net>
-============================================
-I2Cdev device library code is placed under the MIT license
-Copyright (c) 2012 Jeff Rowberg
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-===============================================
-'''
 from MPU6050 import MPU6050
 from SimplePID import SimplePID
 
@@ -143,15 +96,15 @@ try:
             axindex += 1
             if axindex == len(x_accel_avg):
                 axindex = 0
-                print('x_avg_accel_read: ' +
+                print('x_avg_read: ' +
                       str(avg_from_array(x_accel_avg)) +
                       ' x_avg_accel_offset: ' +
                       str(avg_from_array(x_accel_offset_avg)))
-                print('y_avg_accel_read: ' +
+                print('y_avg_read: ' +
                       str(avg_from_array(y_accel_avg)) +
                       ' y_avg_accel_offset: ' +
                       str(avg_from_array(y_accel_offset_avg)))
-                print('z_avg_accel_read: ' +
+                print('z_avg_read: ' +
                       str(avg_from_array(z_accel_avg)) +
                       ' z_avg_accel_offset: ' +
                       str(avg_from_array(z_accel_offset_avg)))
@@ -192,15 +145,15 @@ try:
             gxindex += 1
             if gxindex == len(x_gyro_avg):
                 gxindex = 0
-                print('x_avg_gyro_read: ' +
+                print('x_avg_read: ' +
                       str(avg_from_array(x_gyro_avg)) +
                       ' x_avg_gyro_offset: ' +
                       str(avg_from_array(x_gyro_offset_avg)))
-                print('y_avg_gyro_read: ' +
+                print('y_avg_read: ' +
                       str(avg_from_array(y_gyro_avg)) +
                       ' y_avg_gyro_offset: ' +
                       str(avg_from_array(y_gyro_offset_avg)))
-                print('z_avg_gyro_read: ' +
+                print('z_avg_read: ' +
                       str(avg_from_array(z_gyro_avg)) +
                       ' z_avg_gyro_offset: ' +
                       str(avg_from_array(z_gyro_offset_avg)))
