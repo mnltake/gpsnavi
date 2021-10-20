@@ -14,18 +14,13 @@ sudo systemctl start str2str.service
 sudo systemctl enable str2str.service
 
 #(rover)
-sudo mv rtkrcv.service /etc/systemd/system/
+sudo mv str2str-in.service /etc/systemd/system/
 sudo systemctl daemon-reload
-sudo systemctl start rtkrcv.service
-sudo systemctl enable rtkrcv.service
-sudo mv rtklog.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl start rtklog.service
-sudo systemctl enable rtklog.service
+sudo systemctl start str2str-in.service
+sudo systemctl enable str2str-in.service
 mkdir -p ~/.config/lxsession/LXDE-pi
 cp /etc/xdg/lxsession/LXDE-pi/autostart ~/.config/lxsession/LXDE-pi/
-nano ~/.config/lxsession/LXDE-pi/autostart
-＋　@/home/pi/gpsnavi/gpsnavi.sh
+echo ~/.config/lxsession/LXDE-pi/autostart @/home/pi/gpsnavi/gpsnavi.sh
  
 
 #(shutdownbutton)
@@ -35,9 +30,23 @@ sudo systemctl start shutdownbuttond.service
 sudo systemctl enable shutdownbuttond.service
 
 #(rover gpsnavi import module)
+sudo pip3 install pyshp
 sudo apt-get install libgeos-dev
-sudo pip3 install pyshp Shapely pymap3d rpi_ws281x
+sudo pip3 install Shapely 
+sudo apt-get install python3-numpy
+sudo pip3 install pymap3d
+git clone https://github.com/jgarff/rpi_ws281x
+sudo apt-get install scons
+cd rpi_ws281x
+scons
+sudo pip3 install rpi_ws281x
 
-#(rover bluetooth SPP module )
-sudo nano /boot/config.txt
-+ dtoverlay=pi3-disable-bt
+#(reTerminal )
+sudo pip3 install seeed-python-reterminal
+sudo nano /etc/xdg/lxsession/LXDE/autostart
+ +@xset s off
+  @xset s noblank
+  @xset -dpms
+nano /etc/lightdm/lightdm.conf
+ +[SeatDefaults]
+  xserver-command=X -s 0 -dpms
