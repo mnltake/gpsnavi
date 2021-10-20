@@ -1,8 +1,17 @@
 ﻿
 RaspberryPi用自動起動ファイル
-RTKLIBインストールdir = /home/pi/RTKLIB/
-gpsnaviインストールdir  = /home/pi/gpsnavi/
+#RTKLIBインストールdir = /home/pi/RTKLIB/
 
+git clone https://github.com/mnltake/RTKLIB.git
+cd RTKLIB/app
+chmod 755 makeall.sh
+./makeall.sh -j8
+cd rtkrcv/gcc/
+chmod 755 rtkstart.sh
+chmod 755 rtkshut.sh  
+
+#gpsnaviインストールdir  = /home/pi/gpsnavi/
+git clone https://github.com/mnltake/gpsnavi.git
 cd /home/pi/gpsnavi/
 sudo chmod 755 *.py
 sudo chmod 755 *.sh
@@ -20,7 +29,8 @@ sudo systemctl start str2str-in.service
 sudo systemctl enable str2str-in.service
 mkdir -p ~/.config/lxsession/LXDE-pi
 cp /etc/xdg/lxsession/LXDE-pi/autostart ~/.config/lxsession/LXDE-pi/
-echo ~/.config/lxsession/LXDE-pi/autostart @/home/pi/gpsnavi/gpsnavi.sh
+nano ~/.config/lxsession/LXDE-pi/autostart 
+ +@/home/pi/gpsnavi/gpsnavi.sh
  
 
 #(shutdownbutton)
@@ -31,12 +41,12 @@ sudo systemctl enable shutdownbuttond.service
 
 #(rover gpsnavi import module)
 sudo pip3 install pyshp
-sudo apt-get install libgeos-dev
+sudo apt-get install libgeos-dev -y
 sudo pip3 install Shapely 
-sudo apt-get install python3-numpy
+sudo apt-get install python3-numpy -y
 sudo pip3 install pymap3d
 git clone https://github.com/jgarff/rpi_ws281x
-sudo apt-get install scons
+sudo apt-get install scons -y
 cd rpi_ws281x
 scons
 sudo pip3 install rpi_ws281x
