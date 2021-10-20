@@ -60,3 +60,7 @@ sudo nano /etc/xdg/lxsession/LXDE/autostart
 nano /etc/lightdm/lightdm.conf
  +[SeatDefaults]
   xserver-command=X -s 0 -dpms
+
+#(LXTerminal 設定)
+Monospace Bold 54px
+sudo mv lxtrminal.conf ~/.config/lxterminal/
