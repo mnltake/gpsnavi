@@ -47,6 +47,7 @@ def keypad_get(*allkey):
         return 9
     elif ( GPIO.input(key_y[3]) == 0 ):
         return 12 # [#]
+
     return  0
 
 if __name__ == '__main__':
@@ -58,3 +59,4 @@ if __name__ == '__main__':
     while 1:
         key =keypad_get(*key_x, *key_y)
         print(key)
+        
