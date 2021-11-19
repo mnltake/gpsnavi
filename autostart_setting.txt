@@ -16,6 +16,7 @@ cd /home/pi/gpsnavi/
 sudo chmod 755 *.py
 sudo chmod 755 *.sh
 #(base)
+nano str2str.sh #送りたいcasterとのIP,passwaord,port,mountpointを書き換える
 
 sudo mv str2str.service /etc/systemd/system/
 sudo systemctl daemon-reload
