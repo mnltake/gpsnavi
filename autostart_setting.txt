@@ -54,6 +54,14 @@ cd rpi_ws281x
 scons
 sudo pip3 install rpi_ws281x
 
+#use GPIO UART(AMA0)
+# ラズパイ設定　インターフェイス
+# シリアルポート ON
+# シリアルコンソール OFF
+sudo nano /boot/config.txt
+  + dtoverlay=disable-bt
+sudo systemctl disable hciuart
+
 #lv_micropython
 sudo apt-get install build-essential libreadline-dev libffi-dev git pkg-config libsdl2-2.0-0 libsdl2-dev parallel -y
 sudo apt-get install wmctrl -y

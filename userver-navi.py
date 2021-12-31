@@ -173,7 +173,7 @@ label9.set_style_text_font(myfont_jp, 0)  # set the font
 
 import socket
 from struct import unpack
-import urainfall
+
 
 keyname=["0","A","B","C","S","W","D","View","Rain","EX","Half","M2","SHP"]
 blf = 0
