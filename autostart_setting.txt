@@ -40,16 +40,24 @@ sudo systemctl start shutdownbuttond.service
 sudo systemctl enable shutdownbuttond.service
 
 #(rover gpsnavi import module)
+#shp
 sudo pip3 install pyshp
 sudo apt-get install libgeos-dev -y
 sudo pip3 install Shapely 
 sudo apt-get install python3-numpy -y
 sudo pip3 install pymap3d
+
+#neopixcel
 git clone https://github.com/jgarff/rpi_ws281x
 sudo apt-get install scons -y
 cd rpi_ws281x
 scons
 sudo pip3 install rpi_ws281x
+
+#lv_micropython
+sudo apt-get install build-essential libreadline-dev libffi-dev git pkg-config libsdl2-2.0-0 libsdl2-dev parallel -y
+sudo apt-get install wmctrl -y
+git clone --recurse-submodules https://github.com/lvgl/lv_micropython.git
 
 #(reTerminal )
 sudo pip3 install seeed-python-reterminal
