@@ -16,7 +16,6 @@ cd /home/pi/gpsnavi/
 sudo chmod 755 *.py
 sudo chmod 755 *.sh
 #(base)
-nano str2str.sh #送りたいcasterとのIP,passwaord,port,mountpointを書き換える
 
 sudo mv str2str.service /etc/systemd/system/
 sudo systemctl daemon-reload
@@ -41,16 +40,32 @@ sudo systemctl start shutdownbuttond.service
 sudo systemctl enable shutdownbuttond.service
 
 #(rover gpsnavi import module)
+#shp
 sudo pip3 install pyshp
 sudo apt-get install libgeos-dev -y
 sudo pip3 install Shapely 
 sudo apt-get install python3-numpy -y
 sudo pip3 install pymap3d
+
+#neopixcel
 git clone https://github.com/jgarff/rpi_ws281x
 sudo apt-get install scons -y
 cd rpi_ws281x
 scons
 sudo pip3 install rpi_ws281x
+
+#use GPIO UART(AMA0)
+# ラズパイ設定　インターフェイス
+# シリアルポート ON
+# シリアルコンソール OFF
+sudo nano /boot/config.txt
+  + dtoverlay=disable-bt
+sudo systemctl disable hciuart
+
+#lv_micropython
+sudo apt-get install build-essential libreadline-dev libffi-dev git pkg-config libsdl2-2.0-0 libsdl2-dev parallel -y
+sudo apt-get install wmctrl -y
+git clone --recurse-submodules https://github.com/lvgl/lv_micropython.git
 
 #(reTerminal )
 sudo pip3 install seeed-python-reterminal
@@ -61,7 +76,3 @@ sudo nano /etc/xdg/lxsession/LXDE/autostart
 nano /etc/lightdm/lightdm.conf
  +[SeatDefaults]
   xserver-command=X -s 0 -dpms
-
-#(LXTerminal 設定)
-Monospace Bold 54px
-sudo mv lxtrminal.conf ~/.config/lxterminal/
