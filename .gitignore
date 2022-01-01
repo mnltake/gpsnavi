@@ -1,6 +1,8 @@
 
 *.conf
 Create_PRDID.py
-private_str2str-in_.sh
+private_str2str-in.sh
 private_config.ini
 private_str2str-in.sh
+config.ini
+str2str-in.sh
