@@ -178,7 +178,13 @@ try:
     header ="JST,longitude,latitude,Height,gps_qual,gSpeed,errorarw\n"
     with open(folder + file, "a", encoding = "utf-8") as fileobj:
         fileobj.write(header)
-    s.connect((HOST, PORT))
+    while True:
+        try:
+            s.connect((HOST, PORT))
+        except:
+            pass
+        else:
+            break
     os.system('wmctrl -a "TFT Simulator"' )
     while True:
         key = keypad_get(*key_x, *key_y)

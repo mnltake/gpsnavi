@@ -1,5 +1,7 @@
 #! /home/pi/lv_micropython/ports/unix/micropython
 
+import socket
+from struct import unpack
 import usys as sys
 sys.path.append('') # See: https://github.com/micropython/micropython/issues/6419
 
@@ -18,14 +20,14 @@ fs_driver.fs_register(fs_drv, 'S')
 # Register SDL display driver.
 
 draw_buf = lv.disp_draw_buf_t()
-buf1_1 = bytearray(1280*5)
+buf1_1 = bytearray(1024*5)
 draw_buf.init(buf1_1, None, len(buf1_1)//4)
 disp_drv = lv.disp_drv_t()
 disp_drv.init()
 disp_drv.draw_buf = draw_buf
 disp_drv.flush_cb = SDL.monitor_flush
-disp_drv.hor_res = 1280
-disp_drv.ver_res = 720
+disp_drv.hor_res = 1024
+disp_drv.ver_res = 600
 disp_drv.register()
 # Regsiter SDL mouse driver
 
@@ -39,12 +41,47 @@ indev_drv.register()
 myfont_jp = lv.font_load("S:/home/pi/gpsnavi/font/font-jp-48.bin")
 myfont_jp_60 = lv.font_load("S:/home/pi/gpsnavi/font/font-jp-60.bin")
 #myfont_jp = lv.font_load("S:%s/font-PHT-jp-48.bin" % script_path)
+
+
+
+
+#shutdown Button
+class Button():
+    def __init__(self):
+        btn = lv.btn(lv.scr_act())
+        btn_red = lv.style_t()
+        btn_red.init()
+        btn_red.set_bg_color(lv.palette_main(lv.PALETTE.RED))
+        style_btn_pressed = lv.style_t()
+        style_btn_pressed.init()
+        style_btn_pressed.set_bg_color(lv.palette_main(lv.PALETTE.BLUE))
+        style_btn_pressed.set_bg_grad_color(lv.palette_darken(lv.PALETTE.BLUE, 3))
+        btn.set_size(50, 50)
+        btn.set_pos(0, 0)  
+        btn.add_style(btn_red, 0)
+        btn.add_style(style_btn_pressed, lv.STATE.PRESSED)
+        btn.add_event_cb(self.event_cb, lv.EVENT.ALL, None)
+        label = lv.label(btn)
+        label.set_text("X")
+        label.center()
+
+
+
+    def event_cb(self,evt):
+        code = evt.get_code()
+        btnx = evt.get_target()
+        if code == lv.EVENT.CLICKED:
+            uos.system('sudo shutdown -h now')
+        # Get the first child of the button which is the label and change its text
+        label = btnx.get_child(0)
+        label.set_text("x")
+
 #
 # A simple meter
 #
 meter = lv.meter(lv.scr_act())
 meter.center()
-meter.set_size(650,650)
+meter.set_size(600,600)
 
 # Add a scale first
 scale = meter.add_scale()
@@ -84,14 +121,23 @@ style = lv.style_t()
 style.init()
 style.set_radius(5)
 # Make a gradient
-style.set_width(300)
+style.set_width(250)
 style.set_height(lv.SIZE.CONTENT)
 
-#300 
+#200 
 style1 = lv.style_t()
 style1.init()
+style1.set_bg_color(lv.palette_lighten(lv.PALETTE.GREY, 3))
+style1.set_bg_opa(lv.OPA.COVER)
+style1.set_bg_grad_color(lv.palette_main(lv.PALETTE.GREY))
+style1.set_bg_grad_dir(lv.GRAD_DIR.VER)
+
+# Add a border
+style1.set_border_color(lv.color_white())
+style1.set_border_opa(lv.OPA._70)
+style1.set_border_width(2)
 style1.set_radius(50)
-style1.set_width(300)
+style1.set_width(200)
 style1.set_border_color(lv.color_hex(0xF0F0F0))
 style1.set_height(80)
 #100
@@ -102,37 +148,38 @@ style2.set_width(100)
 style2.set_height(lv.SIZE.CONTENT)
 style2.set_border_color(lv.color_hex(0xFFFFFF))
 style2.set_text_color(lv.palette_main(lv.PALETTE.BLUE))
-#630
+#510
 style3 = lv.style_t()
 style3.init()
 style3.set_radius(5)
-style3.set_width(630)
+style3.set_width(510)
 style3.set_height(lv.SIZE.CONTENT)
-#350
+#250
 style4 = lv.style_t()
 style4.init()
 style4.set_radius(5)
-style4.set_width(350)
+style4.set_width(250)
 style4.set_height(lv.SIZE.CONTENT)
 
 # nav
 txt1 = lv.obj(lv.scr_act())
+txt1.remove_style_all() 
 txt1.add_style(style1, 0)
 txt1.center() 
 label1 = lv.label(txt1)
 label1.center()
-label1.set_style_text_font(myfont_jp_60, 0)  # set the font
+label1.set_style_text_font(myfont_jp, 0)  # set the font
 label1.set_text("Wait.. ")
 #工程
 txt2 = lv.obj(lv.scr_act())
 txt2.add_style(style4, 0)
-txt2.set_pos(10, 10)  
+txt2.set_pos(780, 60)  
 label2 = lv.label(txt2)
 label2.set_style_text_font(myfont_jp, 0)  # set the font
 #幅
 txt3 = lv.obj(lv.scr_act())
 txt3.add_style(style, 0)
-txt3.set_pos(10, 210)  
+txt3.set_pos(0, 60)  
 label3 = lv.label(txt3)
 label3.set_style_text_font(myfont_jp, 0)  # set the font
 
@@ -144,25 +191,26 @@ label3.set_style_text_font(myfont_jp, 0)  # set the font
 #offset
 txt5 = lv.obj(lv.scr_act())
 txt5.add_style(style4, 0)
-txt5.set_pos(10, 510)  
+txt5.set_pos(0, 400)  
 label5 = lv.label(txt5)
 label5.set_style_text_font(myfont_jp, 0)  # set the font
 #圃場面積
 txt6 = lv.obj(lv.scr_act())
 txt6.add_style(style3, 0)
-txt6.set_pos(10, 610)  
+txt6.set_pos(0, 500)  
 label6 = lv.label(txt6)
 label6.set_style_text_font(myfont_jp, 0)  # set the font
 #作業面積
 txt7 = lv.obj(lv.scr_act())
 txt7.add_style(style3, 0)
-txt7.set_pos(640, 610)  
+txt7.set_pos(520, 500)  
 label7 = lv.label(txt7)
 label7.set_style_text_font(myfont_jp, 0)  # set the font
 #基準線
 txt8 = lv.obj(lv.scr_act())
+# txt8.remove_style_all() 
 txt8.add_style(style2, 0)
-txt8.set_pos(600, 430)  
+txt8.set_pos(450, 350)  
 label8 = lv.label(txt8)
 label8.set_style_text_font(myfont_jp_60, 0)  # set the font
 # #速度
@@ -172,26 +220,25 @@ label8.set_style_text_font(myfont_jp_60, 0)  # set the font
 # label9 = lv.label(txt9)
 # label9.set_style_text_font(myfont_jp, 0)  # set the font
 
-import socket
-from struct import unpack
 
-
-keyname=["0","A","B","C","S","W","D","View","Rain","EX","Half","M2","SHP"]
+shutdownbtn = Button()
+keyname=["0","A","B","C","S","W","D","V","R","Ex","H","M2","SHP"]
 blf = False
 view =False
 oldmsg=[0,0,0,0,0,0,-1,-1,-1,0]
 delta=[0,0,0,0,0,0,0,0,0,0]
 addr = socket.getaddrinfo('0.0.0.0', 50001)[0][-1]
-print(addr)
+# print(addr)
 s = socket.socket()
 s.bind(addr)
 s.listen(2)
 
-print('listening on', addr)
+# print('listening on', addr)
 cl, addr = s.accept()
 print('client connected from', addr)
-while True:
 
+
+while True:
     buff = cl.recv(40)
     # print(cl)
     # print(len(buff))
@@ -224,7 +271,7 @@ while True:
                 label3.set_text("幅 :%d㎝" %newmsg[3])
             # label4.set_text("rev :%d" %newmsg[4])
             if delta[4]:
-                label5.set_text("offset :%d㎝" %newmsg[5])
+                label5.set_text("c:%d㎝" %newmsg[5])
             if delta[6]:
                 label6.set_text("圃場面積 :%4d㎡" %newmsg[6])
             if delta[7]:
