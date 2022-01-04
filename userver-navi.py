@@ -245,11 +245,11 @@ addr = socket.getaddrinfo('0.0.0.0', 50001)[0][-1]
 # print(addr)
 s = socket.socket()
 s.bind(addr)
-s.listen(2)
+s.listen(1)
 
 # print('listening on', addr)
 cl, addr = s.accept()
-print('client connected from', addr)
+print('client connected ')
 
 
 while True:
@@ -284,16 +284,16 @@ while True:
             if delta[3]:
                 label3.set_text("幅 :%d㎝" %newmsg[3])
             # label4.set_text("rev :%d" %newmsg[4])
-            if delta[4]:
+            if delta[5]:
                 label5.set_text("c:%d㎝" %newmsg[5])
             if delta[6]:
                 label6.set_text("圃場面積 :%4d㎡" %newmsg[6])
             if delta[7]:
                 label7.set_text("作業面積 :%4d㎡" %newmsg[7])
             
-            if blf==False :
+            if newmsg[4] < 0 :
                 label8.set_text("→" ) 
-            elif blf==True:
+            else:
                 label8.set_text("←" ) 
             #label9.set_text("速度 :%.2fm/s" %navidata[10])
         else:
@@ -301,16 +301,15 @@ while True:
             # print(key)
             label1.set_text("%s pressed"%keyname[key])
             time.sleep(1)
-            if key == 6:
-                blf = not(blf)
-            elif key == 7:
+            if key == 7:
                 view = not(view)
                 if view:
                     uos.system('wmctrl -a "sudo"' )
                 else :
                     uos.system('wmctrl -a "TFT Simulator"' )
         oldmsg = newmsg
-            
+
+  
         # print(str(data, 'utf8'), end='')
         #cl.send(data)
     # cl.close()

@@ -303,10 +303,10 @@ try:
                 resttime = -99
 
 #neopixcel LED
-            wcolorarw (strip , arw)
+#            wcolorarw (strip , arw)
 #表示
 
-            if view == 0  :
+            if view == True  :
                 if nq == 2:
                     print("\033[32m%s\033[0m" %fig) #green
                 elif nq == 1 :
@@ -322,15 +322,16 @@ try:
                     print("　圃場=%4d㎡\033[35m作業＝%4d㎡\033[0m" %(area,menseki))
                 else :
                     print("　圃場=%4d㎡作業＝%4d㎡" %(area,menseki))
+                print("")
                     #print("lon:%3.6f  lat:%2.7f" %(nowmsg['Lon']*0.0000001,nowmsg['Lat']*0.0000001))
 
-            else :
-                if nq == 2 :
-                    print("\033[32m%s\033[0m" %fig)
-                elif nq == 1:
-                    print("\033[33m%s\033[0m" %fig)
-                else :
-                    print("\033[31m%s\033[0m" %fig)
+            # else :
+            #     if nq == 2 :
+            #         print("\033[32m%s\033[0m" %fig)
+            #     elif nq == 1:
+            #         print("\033[33m%s\033[0m" %fig)
+            #     else :
+            #         print("\033[31m%s\033[0m" %fig)
 # # ファイル保存
             # try:
             #     write_file(nowmsg,errorarw)
@@ -342,7 +343,7 @@ try:
             buff=struct.pack("10i",int(arw),int(nav),int(koutei),int(wide),int(rev),int(c),int(area),int(menseki),int(base),int(key))
             s.sendall(buff)
             # print('sendok')
-        
+
         except:
             pass
 #key入力時
@@ -417,9 +418,13 @@ try:
 #            time.sleep(2)
 
         elif ( key == 7): #表示切り替え
-            # view = not(view)
+            view = not(view)
+            if view:
+                os.system('wmctrl -a "TFT Simulator"' )
+            else :
+                os.system('wmctrl -a "sudo"' )
             time.sleep(1)
-
+    
         elif ( key == 8 ):#rainfall
             os.system('wmctrl -a "sudo"' )
             for i in range(6):
