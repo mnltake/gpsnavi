@@ -34,12 +34,14 @@ from rainfall import rainfall
 import socket,struct
 
 config_ini = configparser.ConfigParser()
-config_ini.read('/home/pi/gpsnavi/config.ini', encoding='utf-8')
+config_ini.read('./config.ini', encoding='utf-8')
 read_default = config_ini['DEFAULT']
 roverName = str(read_default.get('roverName'))
 WIDE =int(read_default.get('WIDE'))
 wide = WIDE
 margin = int(read_default.get('margin'))
+ubxPort = str(read_default.get('ubxPort'))
+ubxRate = int(read_default.get('ubxRate'))
 ax = 0 ;ay = 0;bx = 1 ;by = 0 ;ABsin =0; ABcos = 1
 _ax = 0;_ay = 0;_bx = 1;_by = 0;_rad = 0;_ABsin =0;_ABcos =1
 aax = 0;aay = 0;bbx = 0;bby = 0;rrad = 0;AABBsin =0; AABBcos =1
@@ -61,6 +63,7 @@ view = False
 shpfile = read_default.get('shpfile')
 menseki  = 0;kyori = 0;menseki_total =0
 basellh = (float(read_default.get('baselat')),float(read_default.get('baselon')),float(read_default.get('baseh')))
+logdir = read_default.get('logdir')
 
 #socket cli
 HOST = 'localhost'    # The remote host
@@ -105,8 +108,7 @@ strip.begin()
 def setpoint():
     try:
         buffsize = 172
-        #with serial.Serial('/dev/ttyAMA0', 115200, timeout=1) as ser: #UART1
-        with serial.Serial('/dev/ttyACM0', 115200, timeout=1) as ser: #USB
+        with serial.Serial(ubxPort, ubxRate, timeout=1) as ser:
             readbytes =[]
             for i in range(buffsize):
                 readbytes.append(ser.read())
@@ -152,7 +154,7 @@ def wait_NTP():
 #make file
 def make_file():
     now =datetime.now()
-    folder  = '/media/pi/RTKLOG/'+ roverName +'log_{0:%Y%m}/'.format(now)
+    folder  = logdir + roverName +'log_{0:%Y%m}/'.format(now)
     file = '{0:%m%d-%H%M}.csv'.format(now)
     print(file)
     if not os.path.exists(folder):
@@ -429,7 +431,10 @@ try:
             os.system('wmctrl -a "sudo"' )
             for i in range(6):
                 print(" ")
-            rainfall(nowmsg['Lon']*0.0000001, nowmsg['Lat']*0.0000001 , crient_id)
+            try:
+                rainfall(nowmsg['Lon']*0.0000001, nowmsg['Lat']*0.0000001 , crient_id)
+            except :
+                print("No Yahoo crient_id")
             os.system('wmctrl -a "TFT Simulator"' )
             # time.sleep(1)
 

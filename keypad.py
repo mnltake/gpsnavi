@@ -8,6 +8,7 @@ http://www.aitendo.com/product/3644
 
 def keypad_get(*allkey):
     import RPi.GPIO as GPIO
+    GPIO.setwarnings(False)
     key_x =allkey[:3]
     key_y =allkey[3:]
     GPIO.setup(key_y,GPIO.IN,pull_up_down=GPIO.PUD_UP)
