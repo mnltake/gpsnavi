@@ -27,7 +27,7 @@ disp_drv.init()
 disp_drv.draw_buf = draw_buf
 disp_drv.flush_cb = SDL.monitor_flush
 disp_drv.hor_res = 1024
-disp_drv.ver_res = 600
+disp_drv.ver_res = 720
 disp_drv.register()
 # Regsiter SDL mouse driver
 
@@ -38,12 +38,26 @@ indev_drv.read_cb = SDL.mouse_read
 indev_drv.register()
 
 #font
-myfont_jp = lv.font_load("S:/home/pi/gpsnavi/font/font-jp-48.bin")
-myfont_jp_60 = lv.font_load("S:/home/pi/gpsnavi/font/font-jp-60.bin")
+myfont_jp = lv.font_load("S:./font/font-jp-48.bin")
+myfont_jp_60 = lv.font_load("S:./font/font-jp-60.bin")
 #myfont_jp = lv.font_load("S:%s/font-PHT-jp-48.bin" % script_path)
 
+touch_key="0"
 
-
+def event_handler(evt):
+    code = evt.get_code()
+    obj  = evt.get_target()
+    if code == lv.EVENT.VALUE_CHANGED :
+        id = obj.get_selected_btn()
+        touch_key = obj.get_btn_text(id)
+        label1.set_text("%s touch"%touch_key)
+        print("%s was pressed"%touch_key)
+btnm_map = ["A", "B", "C", "S", "W", "D", "V", "R", "E", "M", "H", "P",""]
+btnm1 = lv.btnmatrix(lv.scr_act())
+btnm1.set_size(1024, 75)
+btnm1.set_map(btnm_map)
+btnm1.align(lv.ALIGN.BOTTOM_LEFT, 0, 0)
+btnm1.add_event_cb(event_handler, lv.EVENT.ALL, None)
 
 #shutdown Button
 class Button():
@@ -80,7 +94,7 @@ class Button():
 # A simple meter
 #
 meter = lv.meter(lv.scr_act())
-meter.center()
+meter.align(lv.ALIGN.TOP_MID, 0, 0)
 meter.set_size(600,600)
 
 # Add a scale first
@@ -165,7 +179,7 @@ style4.set_height(lv.SIZE.CONTENT)
 txt1 = lv.obj(lv.scr_act())
 txt1.remove_style_all() 
 txt1.add_style(style1, 0)
-txt1.center() 
+txt1.set_pos(420,200)
 label1 = lv.label(txt1)
 label1.center()
 label1.set_style_text_font(myfont_jp, 0)  # set the font

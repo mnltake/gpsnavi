@@ -83,12 +83,12 @@ key_u = 19
 GPIO.setup(key_u,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 
 #キーパッド
-# reTerminal
-key_y = (40 ,38 ,36 ,32 )
-key_x = (15 ,18 ,16)
-# rpi3A
-# key_y = (37 ,35 ,33 ,31 )
-# key_x = (29 ,23 ,21)
+if (roverName=="reTerminal"):
+    key_y = (40 ,38 ,36 ,32 )
+    key_x = (15 ,18 ,16)
+else :
+    key_y = (37 ,35 ,33 ,31 )
+    key_x = (29 ,23 ,21)
 
 # neopixcel LED strip
 LED_COUNT      = 26     # Number of LED pixels.13
@@ -188,6 +188,8 @@ try:
     os.system('wmctrl -a "TFT Simulator"' )
     while True:
         key = keypad_get(*key_x, *key_y)
+        # touch_key = s.recv(1)
+        # print(touch_key)
     #main
         if (key == 0 ):
             
