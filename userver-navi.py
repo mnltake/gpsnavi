@@ -253,11 +253,11 @@ print('client connected ')
 
 
 while True:
-    buff = cl.recv(40)
+    buff = cl.recv(22)
     # print(cl)
     # print(len(buff))
     if buff:
-        newmsg=unpack('10i',buff)
+        newmsg=unpack('hhHHhhIIbb',buff)
         # print(newmsg)
         for i in range(10):
             if (newmsg[i] == oldmsg[i]):

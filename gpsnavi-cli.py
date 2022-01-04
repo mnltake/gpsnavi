@@ -340,9 +340,9 @@ try:
 # socket send
         try:
             buff=b''
-            buff=struct.pack("10i",int(arw),int(nav),int(koutei),int(wide),int(rev),int(c),int(area),int(menseki),int(base),int(key))
+            buff=struct.pack("hhHHhhIIbb",int(arw),int(nav),int(koutei),int(wide),int(rev),int(c),int(area),int(menseki),int(base),int(key))
             s.sendall(buff)
-            # print('sendok')
+            # print(buff)
 
         except:
             pass
