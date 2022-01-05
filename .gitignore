@@ -6,5 +6,5 @@ private_config.ini
 private_str2str-in.sh
 config.ini
 str2str-in.sh
-__pycache__
+./__pycache__/*.*
 *.pyc
